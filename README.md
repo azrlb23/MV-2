@@ -1,44 +1,51 @@
-# project-desweb-vue
+# Vue-Supabase Dashboard Monitor
 
-This template should help get you started developing with Vue 3 in Vite.
+![Vue.js](https://img.shields.io/badge/Vue.js-3.5-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Auth_&_DB-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-## Recommended IDE Setup
+**Vue-Supabase Dashboard Monitor** adalah aplikasi web monitoring operasional yang modern dan responsif. Aplikasi ini dirancang untuk memfasilitasi manajemen data secara *real-time* dengan pemisahan hak akses yang ketat antara manajemen dan operasional lapangan, didukung oleh infrastruktur backend Supabase yang andal.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Recommended Browser Setup
+## Fitur Unggulan
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+### 1. Authentication & Security
+Sistem autentikasi yang aman menggunakan **Supabase Auth**. State autentikasi dikelola secara global menggunakan **Pinia**, memastikan sesi pengguna tetap terjaga dan aman di seluruh aplikasi.
 
-## Customize configuration
+### 2. Role-Based Access Control (RBAC)
+Aplikasi menerapkan pembatasan akses yang ketat berdasarkan peran pengguna:
+* **Manajer**: Memiliki akses penuh ke *Dashboard Statistik* untuk melihat performa bisnis.
+* **Operator**: Memiliki akses terbatas ke halaman operasional khusus.
+* **Navigation Guards**: Proteksi rute (`router.beforeEach`) mencegah pengguna mengakses halaman yang tidak sesuai dengan hak aksesnya.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### 3. Real-time Dashboard
+Pusat informasi interaktif untuk pengambilan keputusan:
+* **Statistik Kunci**: Memantau Volume, Revenue, dan Jumlah Kendaraan secara langsung.
+* **Live Feed**: Aliran data operasional terbaru.
+* **Auto-Refresh**: Data diperbarui secara otomatis setiap **30 detik** untuk memastikan akurasi tanpa perlu *refresh* halaman manual.
+* **Filter Dinamis**: Analisis data berdasarkan periode (Hari ini, Mingguan, Bulanan) menggunakan fitur `watch` effect dari Vue.
 
-## Project Setup
+### 4. Data Visualization
+Visualisasi data yang informatif menggunakan **Chart.js**:
+* Grafik performa berdasarkan Shift kerja.
+* Statistik kategori kendaraan.
 
-```sh
-npm install
-```
+---
 
-### Compile and Hot-Reload for Development
+## Teknologi yang Digunakan
 
-```sh
-npm run dev
-```
+Daftar teknologi utama berdasarkan konfigurasi proyek:
 
-### Compile and Minify for Production
+* **Core Framework**: Vue 3 (Composition API / Script Setup)
+* **Build Tool**: Vite
+* **Styling**: Tailwind CSS v4 & DaisyUI
+* **State Management**: Pinia
+* **Routing**: Vue Router
+* **Backend & Auth**: Supabase (BaaS)
+* **Visualisasi Data**: Chart.js / Vue-Chartjs
+* **Peta**: Leaflet
+* **Notifikasi**: Vue3-Toastify
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+---
