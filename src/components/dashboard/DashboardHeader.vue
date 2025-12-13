@@ -4,7 +4,7 @@ defineProps({
 })
 defineEmits(['update:modelValue'])
 
-const filters = ['Weekly', 'Today', 'Monthly']
+const filters = ['Weekly', 'Today', 'Monthly', 'All-Time']
 </script>
 
 <template>

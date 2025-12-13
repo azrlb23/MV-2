@@ -1,37 +1,43 @@
+// src/stores/auth.js
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { supabase } from '@/lib/supabaseClient' // Pastikan file ini sudah ada dari langkah sebelumnya
+import { supabase } from '@/lib/supabaseClient'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const role = ref(null)
   const isLoading = ref(false)
 
-  // Aksi Login
+  // 1. Cek User saat aplikasi refresh (PENTING)
+  const initialize = async () => {
+    isLoading.value = true
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (session) {
+      user.value = session.user
+      // Ambil role lagi karena role tidak disimpan di session storage bawaan secara default
+      const { data: roleData } = await supabase.rpc('get_user_role')
+      role.value = roleData
+    }
+    isLoading.value = false
+  }
+
   const login = async (email, password) => {
     isLoading.value = true
     try {
-      // 1. Login ke Supabase Auth
       const { data: { session }, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-
       if (signInError) throw signInError
-
+      
       user.value = session.user
 
-      // 2. Cek Role (Menggunakan RPC yang sudah Anda buat di database)
       const { data: roleData, error: roleError } = await supabase.rpc('get_user_role')
-      
-      if (roleError) {
-        console.error("Gagal mengambil role:", roleError)
-        // Opsional: throw error jika role wajib ada
-      }
+      if (roleError) console.error("Gagal ambil role:", roleError)
 
       role.value = roleData
       return { success: true, role: roleData }
-
     } catch (error) {
       return { success: false, error: error.message }
     } finally {
@@ -39,13 +45,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Aksi Logout
   const logout = async () => {
     await supabase.auth.signOut()
     user.value = null
     role.value = null
-    window.location.href = '/'
+    window.location.href = '/' // Hard refresh untuk membersihkan state
   }
 
-  return { user, role, isLoading, login, logout }
+  return { user, role, isLoading, login, logout, initialize }
 })
