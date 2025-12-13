@@ -1,34 +1,59 @@
 <script setup>
-import { ref, computed } from 'vue' // Tambah computed
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const isSidebarOpen = ref(false)
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 // Data User Dinamis
 const userEmail = computed(() => authStore.user?.email || 'User')
 const userRole = computed(() => authStore.role || 'Guest')
-// Ambil bagian depan email sebagai username sementara
 const userName = computed(() => userEmail.value.split('@')[0])
 
 const handleLogout = async () => {
   await authStore.logout()
-  // Router push tidak diperlukan karena di store kita pakai window.location.href
 }
 
-// Menu (Bisa disesuaikan jika Operator punya menu beda)
+// Menu Items: Sekarang menggunakan SVG Path yang jelas
 const menuItems = [
-  { name: 'Dashboard', icon: '', active: true },
-  { name: 'History', icon: '', active: false },
-  { name: 'Report', icon: '', active: false },
-  { name: 'Team', icon: '', active: false },
+  { 
+    name: 'Dashboard', 
+    route: '/dashboard',
+    // Icon: Kotak-kotak (Grid)
+    iconPath: 'M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z' 
+  },
+  { 
+    name: 'History', 
+    route: '/history',
+    // Icon: Jam (Clock)
+    iconPath: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z' 
+  },
+  { 
+    name: 'Report', 
+    route: '/report',
+    // Icon: Dokumen Chart
+    iconPath: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z' 
+  },
+  { 
+    name: 'Team', 
+    route: '/team',
+    // Icon: User Group
+    iconPath: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z' 
+  },
 ]
 </script>
 
 <template>
   <div class="flex min-h-screen bg-[#f5f5f5] font-sans text-gray-800">
+    <div 
+      v-if="isSidebarOpen" 
+      class="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity"
+      @click="isSidebarOpen = false"
+    ></div>
+
     <aside 
       class="fixed inset-y-0 left-0 z-30 w-64 bg-[#f5f5f5] p-6 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-screen md:overflow-y-auto border-r border-gray-200/50"
       :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
@@ -44,15 +69,28 @@ const menuItems = [
 
       <nav class="space-y-1">
         <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-4">Menu</p>
-        <a v-for="item in menuItems" :key="item.name" href="#" 
-           class="flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 group"
-           :class="item.active ? 'font-bold text-black' : 'font-medium text-gray-500 hover:bg-gray-200/50 hover:text-black'">
-          <span class="text-lg">{{ item.icon }}</span> {{ item.name }}
-        </a>
+        <router-link 
+          v-for="item in menuItems" 
+          :key="item.name" 
+          :to="item.route"
+          class="flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 group"
+          :class="route.path === item.route 
+            ? 'bg-gray-200/50 font-bold text-black' 
+            : 'font-medium text-gray-500 hover:bg-gray-200/50 hover:text-black'"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" :d="item.iconPath" />
+          </svg>
+          {{ item.name }}
+        </router-link>
         
         <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-8">General</p>
+        
         <button @click="handleLogout" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl font-medium text-red-500 hover:bg-red-50 transition-all text-left">
-          <span></span> Logout
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+          </svg>
+          Logout
         </button>
       </nav>
     </aside>
@@ -64,15 +102,17 @@ const menuItems = [
         </button>
 
         <div class="hidden md:flex items-center bg-gradient-to-r from-[#143d2e] to-[#1e5c45] rounded-full px-6 py-3 w-96 shadow-lg shadow-green-900/20">
-          <input type="text" placeholder="Search" class="bg-transparent font-bold text-white placeholder-white/70 outline-none w-full text-sm" />
+          <input type="text" placeholder="search" class="bg-transparent text-white placeholder-white/70 outline-none w-full text-sm" />
         </div>
 
         <div class="flex items-center gap-3">
           <div class="hidden text-right md:block">
-            <p class="text-sm font-bold leading-tight capitalize">{{ userRole }}</p>
+            <p class="text-sm font-bold leading-tight capitalize">{{ userName }}</p>
             <p class="text-xs text-gray-500">{{ userEmail }}</p>
           </div>
-          
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-gray-300 rounded-full border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-600">
+             {{ userName.charAt(0).toUpperCase() }}
+          </div>
         </div>
       </header>
 

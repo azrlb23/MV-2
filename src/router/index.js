@@ -19,6 +19,12 @@ const router = createRouter({
       meta: { requiresAuth: true, role: 'manajer' } // Hanya untuk manajer
     },
     {
+      path: '/history',
+      name: 'history',
+      component: () => import('../views/HistoryView.vue'),
+      meta: { requiresAuth: true, role: 'manajer' }
+    },
+    {
       path: '/operator',
       name: 'operator',
       component: () => import('../views/HomeView.vue'),
