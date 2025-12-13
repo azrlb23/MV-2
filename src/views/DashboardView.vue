@@ -62,14 +62,21 @@ onUnmounted(() => clearInterval(intervalId))
     
     <DashboardHeader v-model="filter" />
 
-    <DashboardStats :stats="stats" />
+    <DashboardStats 
+    :filter="filter"
+    :stats="stats" 
+    />
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <DashboardLiveFeed :items="feed" />
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      
+      <DashboardLiveFeed :items="feed" class="h-full" />
+      
       <DashboardCharts 
-        :vehicleData="vehicleStats" 
-        :shiftData="shiftStats" 
+        :shift-data="shiftStats" 
+        :vehicle-data="vehicleStats" 
+        class="lg:col-span-2 h-full"
       />
+
     </div>
 
   </AdminLayout>

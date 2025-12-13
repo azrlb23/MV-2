@@ -64,7 +64,7 @@ const menuItems = [
         </button>
 
         <div class="hidden md:flex items-center bg-gradient-to-r from-[#143d2e] to-[#1e5c45] rounded-full px-6 py-3 w-96 shadow-lg shadow-green-900/20">
-          <input type="text" placeholder="search" class="bg-transparent text-white placeholder-white/70 outline-none w-full text-sm" />
+          <input type="text" placeholder="Search" class="bg-transparent font-bold text-white placeholder-white/70 outline-none w-full text-sm" />
         </div>
 
         <div class="flex items-center gap-3">
@@ -72,9 +72,7 @@ const menuItems = [
             <p class="text-sm font-bold leading-tight capitalize">{{ userRole }}</p>
             <p class="text-xs text-gray-500">{{ userEmail }}</p>
           </div>
-          <div class="w-10 h-10 md:w-12 md:h-12 bg-gray-300 rounded-full border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-600">
-             {{ userName.charAt(0).toUpperCase() }}
-          </div>
+          
         </div>
       </header>
 

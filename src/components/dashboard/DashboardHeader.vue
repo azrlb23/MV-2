@@ -10,8 +10,8 @@ const filters = ['Weekly', 'Today', 'Monthly', 'All-Time']
 <template>
   <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 gap-4">
     <div>
-      <h2 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight mb-1">dashboard analytics</h2>
-      <p class="text-gray-500 text-sm">Overview performa penjualan hari ini</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight mb-1">Dashboard Analytics</h2>
+      <p class="text-gray-500 font-bold text-sm">Overview performa penjualan</p>
     </div>
 
     <div class="bg-[#184e39] p-1.5 rounded-full flex shadow-lg shadow-green-900/10">

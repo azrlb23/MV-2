@@ -26,7 +26,7 @@ const formatTimeAgo = (dateString) => {
 
 <template>
   <div class="bg-gradient-to-br from-[#143d2e] to-[#1e5c45] rounded-[2rem] p-6 md:p-8 text-white shadow-lg lg:col-span-1 h-full">
-    <h4 class="font-bold text-lg mb-6">live transaction</h4>
+    <h4 class="font-bold text-xl tracking-tight">Recent Transaction</h4>
     
     <div class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
       
