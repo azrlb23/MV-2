@@ -34,3 +34,58 @@ a,
     padding: 0 2rem;
   }
 } */
+
+/* --- 1. Vue Router Page Transitions --- */
+/* Efek Fade & Slide halus saat ganti halaman */
+.content-enter-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #f5f5f5; /* Background putih/abu agar transisi solid */
+}
+
+/* Animasi keluar: Fade Out + Scale Down dikit (agar kesan kedalaman) */
+.content-leave-active {
+  transition: all 0.3s ease-in;
+  position: absolute; /* PENTING: Agar elemen baru menumpuk di atas elemen lama */
+  width: 100%;
+  z-index: -1; /* Elemen lama di belakang */
+  opacity: 0;
+}
+
+.content-enter-from {
+  opacity: 0;
+  transform: translateY(20px); /* Masuk dari bawah */
+}
+
+.content-leave-to {
+  opacity: 0;
+  transform: scale(0.98); /* Mengecil sedikit saat hilang */
+}
+
+/* --- 2. Element Entry Animations (Keyframes) --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility class untuk animasi entry */
+.animate-enter {
+  opacity: 0; /* Mulai invisible agar tidak kedip */
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- 3. State Transitions (Skeleton to Data) --- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}

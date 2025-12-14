@@ -10,25 +10,25 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false, layout: 'auth' } // Layout Auth (Kosong)
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
-      meta: { requiresAuth: true, role: 'manajer' } // Hanya untuk manajer
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' } // Pakai Sidebar
     },
     {
       path: '/history',
       name: 'history',
       component: () => import('../views/HistoryView.vue'),
-      meta: { requiresAuth: true, role: 'manajer' }
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' } // Pakai Sidebar
     },
     {
       path: '/operator',
       name: 'operator',
       component: () => import('../views/HomeView.vue'),
-      meta: { requiresAuth: true, role: 'operator' } // Hanya untuk operator
+      meta: { requiresAuth: true, role: 'operator', layout: 'admin' } // Pakai Sidebar
     }
   ],
 })

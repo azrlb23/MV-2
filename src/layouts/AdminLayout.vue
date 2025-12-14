@@ -116,7 +116,7 @@ const menuItems = [
         </div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-4 md:p-8 pt-0">
+      <main class="flex-1 overflow-y-auto p-4 md:p-8 pt-0 relative">
         <slot></slot>
       </main>
     </div>
