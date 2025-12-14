@@ -28,7 +28,13 @@ const router = createRouter({
       path: '/operator',
       name: 'operator',
       component: () => import('../views/HomeView.vue'),
-      meta: { requiresAuth: true, role: 'operator', layout: 'admin' } // Pakai Sidebar
+      meta: { requiresAuth: true, role: 'operator', layout: 'operator' } // Ganti ke 'operator'
+    },
+    {
+      path: '/operator/history',
+      name: 'operator-history',
+      component: () => import('../views/OperatorHistoryView.vue'),
+      meta: { requiresAuth: true, role: 'operator', layout: 'operator' } // Layout Operator
     }
   ],
 })
