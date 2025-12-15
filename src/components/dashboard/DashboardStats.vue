@@ -1,20 +1,16 @@
 <script setup>
 import { computed } from 'vue'
+import { useFormatters } from '@/composables/useFormatters' // Import
 
 const props = defineProps({
   stats: Object,
   filter: String,
-  loading: Boolean // Prop baru untuk trigger skeleton
+  loading: Boolean
 })
 
-// Fungsi Helper untuk format Rupiah
-const formatRupiah = (number) => {
-  return new Intl.NumberFormat('id-ID', { 
-    style: 'currency', 
-    currency: 'IDR',
-    maximumFractionDigits: 0 
-  }).format(number)
-}
+const { formatRupiah } = useFormatters() // Gunakanzzz
+const { formatDate } = useFormatters()
+const { formatTimeAgo } = useFormatters()
 
 // Helper untuk Logika Warna & Icon
 const getGrowthStyle = (value) => {

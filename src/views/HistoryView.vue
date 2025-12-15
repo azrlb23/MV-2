@@ -1,69 +1,35 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { supabase } from '@/lib/supabaseClient'
 import HistoryHeader from '@/components/history/HistoryHeader.vue'
 import HistoryTable from '@/components/history/HistoryTable.vue'
+import { useTransactionHistory } from '@/composables/useTransactionHistory'
 
-// State Management
-const transactions = ref([])
-const loading = ref(false)
-const searchQuery = ref('')
-const currentPage = ref(1)
-const itemsPerPage = 10
-const totalItems = ref(0)
-
-// Fetch Logic
-const fetchHistory = async () => {
-  loading.value = true
-  try {
-    const from = (currentPage.value - 1) * itemsPerPage
-    const to = from + itemsPerPage - 1
-
-    let query = supabase
-      .from('transaksi_pertalite')
-      .select('*', { count: 'exact' })
-      .order('waktu_pencatatan', { ascending: false })
-      .range(from, to)
-
-    if (searchQuery.value) {
-      query = query.ilike('plat_nomor', `%${searchQuery.value}%`)
-    }
-
-    const { data, count, error } = await query
-
-    if (error) throw error
-    
-    transactions.value = data
-    totalItems.value = count
-  } catch (err) {
-    console.error('Error fetching history:', err.message)
-  } finally {
-    loading.value = false
-  }
-}
-
-watch([currentPage, searchQuery], () => {
-  fetchHistory()
-})
-
-onMounted(() => {
-  fetchHistory()
-})
+// Menggunakan logic yang sudah di-refactor ke composable
+const { 
+  transactions, 
+  loading, 
+  searchQuery, 
+  currentPage, 
+  totalItems 
+} = useTransactionHistory(10)
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 animate-enter">
+  <div class="flex flex-col h-full gap-4 animate-enter overflow-hidden pb-4">
     
-    <HistoryHeader v-model="searchQuery" />
+    <div class="flex-none pt-2 px-1">
+      <HistoryHeader v-model="searchQuery" />
+    </div>
 
-    <HistoryTable 
-      :transactions="transactions"
-      :loading="loading"
-      :current-page="currentPage"
-      :total-items="totalItems"
-      :items-per-page="itemsPerPage"
-      @change-page="(newPage) => currentPage = newPage"
-    />
+    <div class="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-gray-100 shadow-sm bg-white relative">
+      <HistoryTable 
+        :transactions="transactions"
+        :loading="loading"
+        :current-page="currentPage"
+        :total-items="totalItems"
+        :items-per-page="10"
+        @change-page="(newPage) => currentPage = newPage"
+      />
+    </div>
 
   </div>
 </template>

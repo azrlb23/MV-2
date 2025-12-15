@@ -1,21 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { supabase } from '@/lib/supabaseClient'
-import { toast } from 'vue3-toastify'
-
 import VehicleSelector from '@/components/operator/VehicleSelector.vue'
 import TransactionForm from '@/components/operator/TransactionForm.vue'
 import TransactionSuccess from '@/components/operator/TransactionSuccess.vue'
+import { useTransactionAction } from '@/composables/useTransactionAction'
 
-const authStore = useAuthStore()
-
-// State
+// UI State
 const step = ref(1)
-const loading = ref(false)
 const selectedVehicle = ref('')
 
-// Actions Flow Transaksi
+// Logic State (Dari Composable)
+const { loading, submitTransaction } = useTransactionAction()
+
+// Actions UI Flow
 const handleVehicleSelect = (type) => {
   selectedVehicle.value = type
   step.value = 2
@@ -31,84 +28,36 @@ const handleReset = () => {
   step.value = 1
 }
 
-const handleSubmitTransaction = async (formData) => {
-  const { plat_nomor, liter, total_harga } = formData
-  const plat = plat_nomor.toUpperCase()
-
-  if (!plat || !liter) {
-    toast.warn("Mohon lengkapi data!")
-    return
-  }
-
-  loading.value = true
-
-  try {
-    const today = new Date().toISOString().split('T')[0]
-    const { data: duplicates } = await supabase
-      .from('transaksi_pertalite')
-      .select('id')
-      .eq('plat_nomor', plat)
-      .gte('waktu_pencatatan', `${today}T00:00:00`)
-      .lte('waktu_pencatatan', `${today}T23:59:59`)
-    
-    if (duplicates && duplicates.length > 0) {
-      const confirm = window.confirm("Kendaraan ini sudah mengisi BBM hari ini. Lanjutkan?")
-      if (!confirm) {
-        loading.value = false
-        return
-      }
-    }
-
-    const { error } = await supabase.from('transaksi_pertalite').insert({
-      plat_nomor: plat,
-      liter: parseFloat(liter),
-      harga: total_harga,
-      jenis_kendaraan: selectedVehicle.value,
-      operator_id: authStore.user.id
-    })
-
-    if (error) throw error
-
-    toast.success("Transaksi Berhasil!")
+// Handler Process
+const handleProcess = async (formData) => {
+  const success = await submitTransaction(formData, selectedVehicle.value)
+  if (success) {
     step.value = 3
-    
     setTimeout(() => {
       if (step.value === 3) handleReset()
     }, 2000)
-
-  } catch (err) {
-    console.error(err)
-    toast.error("Gagal: " + err.message)
-  } finally {
-    loading.value = false
   }
 }
 </script>
 
 <template>
   <div class="flex-1 h-full flex flex-col items-center justify-center w-full gap-6 animate-enter">
-
+    
     <div class="w-full max-w-2xl bg-gradient-to-br from-[#143d2e] to-[#1e5c45] rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-8 text-white shadow-2xl relative overflow-hidden min-h-[350px] flex flex-col justify-center transition-all duration-300">
       
       <div class="absolute top-0 right-0 w-60 h-60 bg-white/5 rounded-full blur-3xl -translate-y-10 translate-x-10 pointer-events-none"></div>
 
-      <VehicleSelector 
-        v-if="step === 1" 
-        @select="handleVehicleSelect" 
-      />
+      <VehicleSelector v-if="step === 1" @select="handleVehicleSelect" />
 
       <TransactionForm 
         v-if="step === 2"
         :vehicle-type="selectedVehicle"
         :loading="loading"
-        @submit="handleSubmitTransaction"
+        @submit="handleProcess" 
         @back="handleBack"
       />
 
-      <TransactionSuccess 
-        v-if="step === 3" 
-        @reset="handleReset"
-      />
+      <TransactionSuccess v-if="step === 3" @reset="handleReset" />
     </div>
 
     <router-link 

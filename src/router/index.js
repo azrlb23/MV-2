@@ -47,6 +47,12 @@ const router = createRouter({
       name: 'support',  // Ganti name
       component: () => import('../views/SupportView.vue'), // Load SupportView
       meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
+    },
+    {
+      path: '/team',
+      name: 'team',
+      component: () => import('../views/TeamView.vue'),
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     }
   ],
 })
