@@ -11,26 +11,22 @@
 
 ## Fitur Unggulan
 
-### 1. Authentication & Security
-Sistem autentikasi yang aman menggunakan **Supabase Auth**. State autentikasi dikelola secara global menggunakan **Pinia**, memastikan sesi pengguna tetap terjaga dan aman di seluruh aplikasi.
+### 1. Konsol Operator (Operator Layout)
+* **Antarmuka Fokus:** Desain minimalis untuk input data cepat di lapangan.
+* **Validasi Transaksi:** Pencegahan input duplikat untuk kendaraan yang sama pada hari yang sama.
+* **Riwayat Harian:** Tampilan riwayat transaksi harian per operator.
+* **Responsivitas:** Tampilan adaptif yang optimal untuk perangkat seluler.
 
-### 2. Role-Based Access Control (RBAC)
-Aplikasi menerapkan pembatasan akses yang ketat berdasarkan peran pengguna:
-* **Manajer**: Memiliki akses penuh ke *Dashboard Statistik* untuk melihat performa bisnis.
-* **Operator**: Memiliki akses terbatas ke halaman operasional khusus.
-* **Navigation Guards**: Proteksi rute (`router.beforeEach`) mencegah pengguna mengakses halaman yang tidak sesuai dengan hak aksesnya.
+### 2. Dasbor Manajerial (Admin Layout)
+* **Statistik Real-time:** Visualisasi volume penjualan, pendapatan, dan pertumbuhan transaksi.
+* **Manajemen Riwayat:** Tabel data lengkap dengan fitur penomoran halaman (pagination) sisi server.
+* **Pusat Bantuan (IT Support):** Modul pelaporan masalah sistem dan kontak darurat teknis.
 
-### 3. Real-time Dashboard
-Pusat informasi interaktif untuk pengambilan keputusan:
-* **Statistik Kunci**: Memantau Volume, Revenue, dan Jumlah Kendaraan secara langsung.
-* **Live Feed**: Aliran data operasional terbaru.
-* **Auto-Refresh**: Data diperbarui secara otomatis setiap **30 detik** untuk memastikan akurasi tanpa perlu *refresh* halaman manual.
-* **Filter Dinamis**: Analisis data berdasarkan periode (Hari ini, Mingguan, Bulanan) menggunakan fitur `watch` effect dari Vue.
-
-### 4. Data Visualization
-Visualisasi data yang informatif menggunakan **Chart.js**:
-* Grafik performa berdasarkan Shift kerja.
-* Statistik kategori kendaraan.
+### 3. Modul Laporan & Analitik
+* **Filter Kustom:** Pemilihan rentang tanggal fleksibel untuk analisis periode tertentu.
+* **Kalkulasi Sisi Server:** Menggunakan PostgreSQL RPC untuk perhitungan statistik akurat tanpa batasan baris.
+* **Ekspor Data:** Fitur unduh laporan dalam format Excel (.xlsx) dengan dukungan data skala besar (teknik *chunking*).
+* **Tata Letak Adaptif:** Tampilan *fit-to-screen* dengan area gulir (scroll) terisolasi pada tabel data.
 
 ---
 
@@ -38,14 +34,33 @@ Visualisasi data yang informatif menggunakan **Chart.js**:
 
 Daftar teknologi utama berdasarkan konfigurasi proyek:
 
-* **Core Framework**: Vue 3 (Composition API / Script Setup)
-* **Build Tool**: Vite
-* **Styling**: Tailwind CSS v4 & DaisyUI
-* **State Management**: Pinia
-* **Routing**: Vue Router
-* **Backend & Auth**: Supabase (BaaS)
-* **Visualisasi Data**: Chart.js / Vue-Chartjs
-* **Peta**: Leaflet
-* **Notifikasi**: Vue3-Toastify
+* **Kerangka Kerja Frontend:** Vue.js 3 (Composition API)
+* **Build Tool:** Vite
+* **Manajemen State:** Pinia
+* **Styling:** Tailwind CSS v4 & DaisyUI
+* **Basis Data & Backend:** Supabase (PostgreSQL)
+* **Autentikasi:** Supabase Auth
+* **Utilitas:** XLSX (Ekspor Data), Vue3-Toastify (Notifikasi)
 
 ---
+
+```text
+src/
+├── assets/          # Aset statis (Gambar, CSS Global)
+├── components/      # Komponen Vue yang dapat digunakan kembali
+│   ├── auth/        # Komponen autentikasi
+│   ├── dashboard/   # Komponen visualisasi dasbor
+│   ├── history/     # Komponen tabel riwayat
+│   ├── operator/    # Komponen input operator
+│   ├── report/      # Komponen header dan statistik laporan
+│   └── support/     # Komponen formulir bantuan
+├── composables/     # Logika bisnis yang dapat digunakan kembali (misal: Export Excel)
+├── layouts/         # Tata letak halaman (Admin & Operator)
+├── lib/             # Konfigurasi klien eksternal (Supabase)
+├── stores/          # Manajemen state global (Pinia)
+└── views/           # Halaman utama aplikasi
+```text
+
+---
+
+Hak Cipta © 2025 PT. Habi Jaya. Seluruh hak cipta dilindungi undang-undang. Sistem ini bersifat privat dan hanya ditujukan untuk penggunaan internal perusahaan.

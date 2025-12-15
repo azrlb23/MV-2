@@ -3,7 +3,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
 </script>
 
 <template>
-  <div class="flex min-h-screen w-full relative overflow-hidden bg-[#143d2e] animate-enter">
+  <div class="flex h-screen w-full relative overflow-hidden bg-[#143d2e] animate-enter">
 
     <div class="absolute inset-0 z-0">
       <img 
@@ -14,16 +14,12 @@ import LoginForm from '@/components/auth/LoginForm.vue'
       <div class="absolute inset-0 bg-gradient-to-br from-[#143d2e]/95 to-[#1e5c45]/95"></div>
     </div>
 
-    <div class="relative z-10 flex w-full h-full min-h-screen">
-
-      <div class="hidden lg:flex relative w-[65%] overflow-hidden">
-        
+    <div class="relative z-10 flex w-full h-full"> <div class="hidden lg:flex relative w-[65%] h-full overflow-hidden">
         <img 
           src="@/assets/HJ_Photo.png" 
           alt="Habi Jaya Background" 
           class="absolute inset-0 w-full h-full object-cover object-center"
         />
-        
         <div class="absolute inset-0 bg-gradient-to-br from-[#143d2e]/90 to-[#1e5c45]/80 mix-blend-multiply"></div>
 
         <div class="relative z-10 flex flex-col justify-between p-16 w-full h-full text-white">
@@ -50,11 +46,9 @@ import LoginForm from '@/components/auth/LoginForm.vue'
         </div>
       </div>
 
-      <div class="flex-1 lg:w-[35%] flex flex-col items-center justify-center p-6 sm:p-12 lg:p-16 w-full lg:bg-white transition-all duration-300">
+      <div class="flex-1 lg:w-[35%] h-full flex flex-col items-center justify-center p-6 sm:p-12 lg:p-16 w-full lg:bg-white transition-all duration-300 overflow-y-auto">
         
-        <div class="w-full max-w-sm space-y-10">
-          
-          <div class="lg:hidden text-center space-y-2">
+        <div class="w-full max-w-sm space-y-10 my-auto"> <div class="lg:hidden text-center space-y-2">
             <img src="@/assets/HJ_dark.png" alt="Logo" class="w-20 h-20 mx-auto brightness-0 invert opacity-90" />
             <h1 class="text-3xl font-black text-white tracking-tight drop-shadow-md">HABI JAYA</h1>
             <p class="text-xs font-bold text-green-200 uppercase tracking-widest">Operator Console</p>

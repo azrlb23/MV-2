@@ -5,6 +5,14 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 
+html, body, #app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Mencegah scrollbar window utama */
+}
+
 /* 3. Konfigurasi Theme (Tailwind v4) */
 @theme {
   /* Mengganti default font-sans menjadi Plus Jakarta Sans */

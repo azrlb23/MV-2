@@ -12,8 +12,9 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#f0fdf4] font-sans text-gray-800 flex flex-col">
-    <header class="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
+  <div class="h-screen w-full bg-[#f0fdf4] font-sans text-gray-800 flex flex-col overflow-hidden">
+    
+    <header class="bg-white/80 backdrop-blur-md border-b border-green-100 flex-none z-50">
       <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         
         <div class="flex items-center gap-3">
@@ -45,11 +46,11 @@ const handleLogout = async () => {
       </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col">
+    <main class="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8 flex flex-col overflow-y-auto relative">
       <slot></slot>
     </main>
 
-    <footer class="text-center py-4 text-xs text-gray-400">
+    <footer class="flex-none text-center py-4 text-xs text-gray-400 bg-[#f0fdf4]">
       &copy; {{ new Date().getFullYear() }} Habi Jaya System
     </footer>
   </div>
