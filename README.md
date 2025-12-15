@@ -59,8 +59,6 @@ src/
 ├── lib/             # Konfigurasi klien eksternal (Supabase)
 ├── stores/          # Manajemen state global (Pinia)
 └── views/           # Halaman utama aplikasi
-```text
-
----
+```
 
 Hak Cipta © 2025 PT. Habi Jaya. Seluruh hak cipta dilindungi undang-undang. Sistem ini bersifat privat dan hanya ditujukan untuk penggunaan internal perusahaan.
