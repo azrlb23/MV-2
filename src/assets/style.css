@@ -1,67 +1,43 @@
+/* 1. Import Font dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+/* 2. Load Tailwind & Plugins */
 @import 'tailwindcss';
 @plugin "daisyui";
 
-/* #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* 3. Konfigurasi Theme (Tailwind v4) */
+@theme {
+  /* Mengganti default font-sans menjadi Plus Jakarta Sans */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
+/* --- TRANSITIONS & ANIMATIONS --- */
+/* (Biarkan kode animasi Anda yang sudah ada tetap disini) */
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-} */
-
-/* --- 1. Vue Router Page Transitions --- */
 /* Efek Fade & Slide halus saat ganti halaman */
 .content-enter-active {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  background-color: #f5f5f5; /* Background putih/abu agar transisi solid */
+  background-color: #f5f5f5;
 }
 
-/* Animasi keluar: Fade Out + Scale Down dikit (agar kesan kedalaman) */
 .content-leave-active {
   transition: all 0.3s ease-in;
-  position: absolute; /* PENTING: Agar elemen baru menumpuk di atas elemen lama */
+  position: absolute;
   width: 100%;
-  z-index: -1; /* Elemen lama di belakang */
+  z-index: -1;
   opacity: 0;
 }
 
 .content-enter-from {
   opacity: 0;
-  transform: translateY(20px); /* Masuk dari bawah */
+  transform: translateY(20px);
 }
 
 .content-leave-to {
   opacity: 0;
-  transform: scale(0.98); /* Mengecil sedikit saat hilang */
+  transform: scale(0.98);
 }
 
-/* --- 2. Element Entry Animations (Keyframes) --- */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -73,13 +49,12 @@ a,
   }
 }
 
-/* Utility class untuk animasi entry */
 .animate-enter {
-  opacity: 0; /* Mulai invisible agar tidak kedip */
+  opacity: 0;
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* --- 3. State Transitions (Skeleton to Data) --- */
+/* State Transitions */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;

@@ -35,6 +35,18 @@ const router = createRouter({
       name: 'operator-history',
       component: () => import('../views/OperatorHistoryView.vue'),
       meta: { requiresAuth: true, role: 'operator', layout: 'operator' } // Layout Operator
+    },
+    {
+      path: '/laporan',
+      name: 'laporan',
+      component: () => import('../views/ReportView.vue'),
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
+    },
+    {
+      path: '/support', // Ganti path
+      name: 'support',  // Ganti name
+      component: () => import('../views/SupportView.vue'), // Load SupportView
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     }
   ],
 })
