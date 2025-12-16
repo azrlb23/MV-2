@@ -1,16 +1,18 @@
 import { ref, watch, onMounted } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
-import { useRoute } from 'vue-router' // Import route
+import { useRoute } from 'vue-router'
 
 export function useTransactionHistory(itemsPerPage = 10, options = {}) {
+  // State
   const transactions = ref([])
   const loading = ref(false)
   const totalItems = ref(0)
   const currentPage = ref(1)
   const searchQuery = ref('')
   
-  const route = useRoute() // Akses Route
+  const route = useRoute()
 
+  // 1. DEKLARASI FUNGSI FETCH (Namanya fetchHistory)
   const fetchHistory = async () => {
     loading.value = true
     try {
@@ -23,10 +25,12 @@ export function useTransactionHistory(itemsPerPage = 10, options = {}) {
         .order('waktu_pencatatan', { ascending: false })
         .range(from, to)
 
+      // Filter Search
       if (searchQuery.value) {
         query = query.ilike('plat_nomor', `%${searchQuery.value}%`)
       }
 
+      // Filter Date (Opsional)
       if (options.dateFilter) {
         const today = new Date().toISOString().split('T')[0]
         query = query.gte('waktu_pencatatan', `${today}T00:00:00`)
@@ -46,14 +50,24 @@ export function useTransactionHistory(itemsPerPage = 10, options = {}) {
     }
   }
 
-  // Watcher
+  // 2. WATCHER UTAMA (Otomatis fetch saat page/search berubah)
   watch([currentPage, searchQuery], () => {
     fetchHistory()
   })
 
+  // 3. WATCHER GLOBAL SEARCH (Tambahan Baru)
+  // Ini akan mendeteksi perubahan URL (?q=...) dan mengupdate searchQuery
+  watch(() => route.query.q, (newQuery) => {
+    if (newQuery !== undefined) {
+      searchQuery.value = newQuery
+      // Tidak perlu panggil fetchHistory() manual, 
+      // karena Watcher Nomor 2 di atas akan otomatis jalan saat searchQuery berubah.
+    }
+  })
+
   // Lifecycle
   onMounted(() => {
-    // Cek apakah ada query param 'q' dari Global Search
+    // Cek URL saat pertama kali load
     if (route.query.q) {
       searchQuery.value = route.query.q
     }

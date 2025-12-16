@@ -69,58 +69,56 @@ const menuItems = [
     
     <div 
       v-if="isSidebarOpen" 
-      class="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity"
+      class="fixed inset-0 bg-black/50 z-20 xl:hidden transition-opacity"
       @click="isSidebarOpen = false"
     ></div>
 
     <aside 
-      class="fixed inset-y-0 left-0 z-30 w-64 bg-[#f5f5f5] p-6 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static border-r border-gray-200/50 flex flex-col h-full overflow-y-auto"
+      class="fixed inset-y-0 left-0 z-30 w-64 bg-[#f5f5f5] p-6 transform transition-transform duration-300 ease-in-out xl:translate-x-0 xl:static border-r border-gray-200/50 flex flex-col h-full overflow-y-auto"
       :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
         <div class="mb-10 flex items-center gap-3 px-2 flex-none">
-            <img src="@/assets/HJ_dark.png" alt="Habi Jaya Logo" class="w-12 h-12" />
+            <img src="@/assets/HJ_dark.png" alt="Logo" class="w-12 h-12" />
             <div>
-            <h1 class="text-xl font-black tracking-tighter text-green-800 leading-none">HABI JAYA</h1>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Management</p>
+              <h1 class="text-xl font-black text-green-800 leading-none">HABI JAYA</h1>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Management</p>
             </div>
         </div>
 
         <nav class="space-y-1 flex-1">
-            <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-4">Menu</p>
             <router-link 
-            v-for="item in menuItems" 
-            :key="item.name" 
-            :to="item.route"
-            class="flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 group"
-            :class="route.path === item.route 
-                ? 'bg-gray-200/50 font-bold text-black' 
-                : 'font-medium text-gray-500 hover:bg-gray-200/50 hover:text-black'"
+              v-for="item in menuItems" 
+              :key="item.name" 
+              :to="item.route"
+              @click="isSidebarOpen = false" 
+              class="flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 group"
+              :class="route.path === item.route ? 'bg-gray-200/50 font-bold text-black' : 'font-medium text-gray-500 hover:bg-gray-200/50'"
             >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" :d="item.iconPath" />
-            </svg>
-            {{ item.name }}
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" :d="item.iconPath" />
+              </svg>
+              {{ item.name }}
             </router-link>
             
             <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 mt-8">General</p>
-            
-            <button @click="handleLogout" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl font-medium text-red-500 hover:bg-red-50 transition-all text-left">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-            </svg>
-            Logout
+            <button @click="handleLogout" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl font-medium text-red-500 hover:bg-red-50 text-left">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
+              Logout
             </button>
         </nav>
     </aside>
 
     <div class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
       
-      <header class="flex-none flex items-center justify-between p-4 md:px-8 md:py-6 bg-[#f5f5f5] z-10">
-        <button @click="isSidebarOpen = true" class="md:hidden p-2 text-gray-600">
+      <header class="flex-none flex items-center justify-between p-4 md:px-8 md:py-6 bg-[#f5f5f5] z-10 gap-4">
+        
+        <button @click="isSidebarOpen = true" class="xl:hidden p-2 text-gray-600 hover:bg-gray-200 rounded-lg">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
         </button>
 
-        <div class="hidden md:flex items-center bg-gradient-to-r from-[#143d2e] to-[#1e5c45] rounded-full px-6 py-3 w-96 shadow-lg shadow-green-900/20 transition-all focus-within:ring-2 focus-within:ring-green-400 focus-within:w-[28rem]">
+        <div class="hidden md:flex items-center bg-gradient-to-r from-[#143d2e] to-[#1e5c45] rounded-full px-4 py-2 md:px-6 md:py-3 flex-1 max-w-md shadow-lg shadow-green-900/20 transition-all mx-auto lg:mx-0">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-white/70 mr-3">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
@@ -128,13 +126,13 @@ const menuItems = [
             v-model="globalSearch"
             @keyup.enter="handleGlobalSearch"
             type="text" 
-            placeholder="Cari Plat Nomor (Tekan Enter)" 
+            placeholder="Cari Plat Nomor..." 
             class="bg-transparent text-white placeholder-white/70 outline-none w-full text-sm font-medium" 
           />
         </div>
 
-        <div class="flex items-center gap-3">
-          <div class="hidden text-right md:block">
+        <div class="flex items-center gap-3 flex-none">
+          <div class="hidden text-right lg:block">
             <p class="text-sm font-bold leading-tight capitalize">{{ userName }}</p>
             <p class="text-xs text-gray-500">Administrator</p>
           </div>
@@ -144,7 +142,7 @@ const menuItems = [
         </div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative">
         <slot></slot>
       </main>
 

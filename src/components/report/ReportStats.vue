@@ -12,7 +12,7 @@ const formatRupiah = (number) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-200 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
     
     <div class="bg-white p-3 flex flex-col justify-center items-center">
       <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Volume</p>

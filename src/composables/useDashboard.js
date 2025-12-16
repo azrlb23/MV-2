@@ -5,57 +5,69 @@ export function useDashboard() {
   const filter = ref('today')
   const isLoading = ref(false)
   
-  // Struktur Data Awal
+  // State Data Lama
   const stats = ref({ volume: 0, revenue: 0, vehicle: 0 })
   const feed = ref([])
-  const chartData = ref([])
-  const vehicleStats = ref([])
   const shiftStats = ref([])
+  const vehicleStats = ref([])
+  const peakHourStats = ref([]) 
+  const loyalStats = ref([])    
+
+  // State Data BARU
+  const trendStats = ref([])       // Feature 1
+  const ticketSizeStats = ref([])  // Feature 2
+  const revenueShareStats = ref([]) // Feature 3
 
   const fetchData = async () => {
     try {
       isLoading.value = true
-      // Memanggil RPC Supabase
+      console.log(`[Dashboard] Fetching data for filter: ${filter.value}...`)
+
       const { data, error } = await supabase.rpc('get_dashboard_summary', { 
         p_filter: filter.value 
       })
       
-      if (error) throw error
+      if (error) {
+        console.error("[Dashboard] Supabase RPC Error:", error)
+        throw error
+      }
 
       if (data) {
-        stats.value = data.stats
-        feed.value = data.feed
-        chartData.value = data.chart
-        vehicleStats.value = data.vehicle_chart
-        shiftStats.value = data.shift_chart
+        stats.value = data.stats || { volume: 0, revenue: 0, vehicle: 0 }
+        feed.value = data.feed || []
+        shiftStats.value = data.shift_chart || []
+        vehicleStats.value = data.vehicle_chart || []
+        peakHourStats.value = data.peak_hours || []
+        loyalStats.value = data.loyal_customers || []
+        
+        // Assign Data Baru
+        trendStats.value = data.trend_7_days || []
+        ticketSizeStats.value = data.ticket_size || []
+        revenueShareStats.value = data.revenue_share || []
+        
+        console.log("[Dashboard] All stats updated.")
       }
     } catch (err) {
-      console.error("Gagal load data dashboard:", err.message)
+      console.error("[Dashboard] Error:", err)
     } finally {
       isLoading.value = false
     }
   }
 
-  // Setup Lifecycle & Polling
   let intervalId
-  
   onMounted(() => {
     fetchData()
-    intervalId = setInterval(fetchData, 30000) // Auto refresh tiap 30 detik
+    intervalId = setInterval(fetchData, 30000)
   })
 
   onUnmounted(() => clearInterval(intervalId))
 
-  // Watcher Filter
   watch(filter, () => fetchData())
 
   return {
-    filter,
-    isLoading,
-    stats,
-    feed,
-    chartData,
-    vehicleStats,
-    shiftStats
+    filter, isLoading, stats, feed, 
+    shiftStats, vehicleStats, peakHourStats, loyalStats,
+    // Return Data Baru
+    trendStats, ticketSizeStats, revenueShareStats
   }
 }
