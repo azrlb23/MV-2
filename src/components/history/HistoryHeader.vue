@@ -9,7 +9,7 @@ defineEmits(['update:modelValue'])
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
     <div>
       <h2 class="text-3xl md:text-4xl font-extrabold text-black tracking-tight mb-1">Transaction History</h2>
-      <p class="text-gray-500 text-sm">Rekapitulasi seluruh transaksi operasional</p>
+      <p class="text-gray-500 text-sm font-bold">Rekapitulasi seluruh transaksi operasional</p>
     </div>
 
     <div class="relative w-full md:w-64">
