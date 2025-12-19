@@ -25,7 +25,7 @@ const chartData = computed(() => {
       backgroundColor: (ctx) => {
         const canvas = ctx.chart.ctx;
         const gradient = canvas.createLinearGradient(0, 0, 0, 200);
-        gradient.addColorStop(0, 'rgba(52, 211, 153, 0.5)'); // Green-400
+        gradient.addColorStop(0, 'rgba(52, 211, 153, 0.5)'); 
         gradient.addColorStop(1, 'rgba(52, 211, 153, 0)');
         return gradient;
       },
@@ -45,7 +45,7 @@ const chartOptions = {
   plugins: { legend: { display: false } },
   scales: {
     x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-    y: { display: false } // Sembunyikan sumbu Y agar bersih
+    y: { display: false } 
   }
 }
 </script>

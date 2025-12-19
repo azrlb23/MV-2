@@ -9,7 +9,7 @@ export function useTeam() {
   const fetchTeam = async () => {
     loading.value = true
     try {
-      // Mengambil data dari VIEW yang kita buat tadi
+      
       const { data, error: err } = await supabase
         .from('team_members') 
         .select('*')

@@ -10,6 +10,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
         src="@/assets/HJ_Photo.png" 
         alt="Background Pattern" 
         class="w-full h-full object-cover opacity-40 mix-blend-overlay"
+        style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;"
       />
       <div class="absolute inset-0 bg-gradient-to-br from-[#143d2e]/95 to-[#1e5c45]/95"></div>
     </div>
@@ -19,6 +20,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
           src="@/assets/HJ_Photo.png" 
           alt="Habi Jaya Background" 
           class="absolute inset-0 w-full h-full object-cover object-center"
+          style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;"
         />
         <div class="absolute inset-0 bg-gradient-to-br from-[#143d2e]/90 to-[#1e5c45]/80 mix-blend-multiply"></div>
 

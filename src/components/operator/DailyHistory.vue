@@ -36,7 +36,7 @@ onMounted(() => {
   fetchTodayHistory()
 })
 
-// Expose fungsi refresh agar bisa dipanggil parent
+
 defineExpose({ fetchTodayHistory })
 </script>
 

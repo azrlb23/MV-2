@@ -18,10 +18,10 @@ const props = defineProps({
 })
 
 const chartData = computed(() => {
-  // Buat label jam 00 - 23
+  
   const hours = Array.from({ length: 24 }, (_, i) => i)
   
-  // Map data dari DB ke array 24 jam (isi 0 jika tidak ada data)
+  
   const counts = hours.map(h => {
     const found = props.data.find(d => d.hour === h)
     return found ? found.count : 0

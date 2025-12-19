@@ -11,7 +11,7 @@ export function useTransactionAction() {
     const { plat_nomor, liter, total_harga } = formData
     const plat = plat_nomor.toUpperCase()
 
-    // Validasi Dasar
+    
     if (!plat || !liter) {
       toast.warn("Mohon lengkapi data!")
       return false
@@ -20,7 +20,7 @@ export function useTransactionAction() {
     loading.value = true
 
     try {
-      // 1. Cek Duplikasi Harian
+      
       const today = new Date().toISOString().split('T')[0]
       const { data: duplicates } = await supabase
         .from('transaksi_pertalite')
@@ -34,7 +34,7 @@ export function useTransactionAction() {
         if (!confirm) return false
       }
 
-      // 2. Insert Data
+      
       const { error } = await supabase.from('transaksi_pertalite').insert({
         plat_nomor: plat,
         liter: parseFloat(liter),
@@ -46,7 +46,7 @@ export function useTransactionAction() {
       if (error) throw error
 
       toast.success("Transaksi Berhasil!")
-      return true // Return true jika sukses
+      return true 
 
     } catch (err) {
       console.error(err)

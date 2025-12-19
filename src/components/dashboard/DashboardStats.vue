@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useFormatters } from '@/composables/useFormatters' // Import
+import { useFormatters } from '@/composables/useFormatters' 
 
 const props = defineProps({
   stats: Object,
@@ -8,11 +8,11 @@ const props = defineProps({
   loading: Boolean
 })
 
-const { formatRupiah } = useFormatters() // Gunakanzzz
+const { formatRupiah } = useFormatters() 
 const { formatDate } = useFormatters()
 const { formatTimeAgo } = useFormatters()
 
-// Helper untuk Logika Warna & Icon
+
 const getGrowthStyle = (value) => {
   if (value > 0) return { color: 'text-green-200', bg: 'bg-green-500/20', icon: '↗' }
   if (value < 0) return { color: 'text-red-200', bg: 'bg-red-500/20', icon: '↘' }

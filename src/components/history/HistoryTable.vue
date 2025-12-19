@@ -9,7 +9,7 @@ const props = defineProps({
 
 const emit = defineEmits(['changePage'])
 
-// Helper Formatters
+
 const formatRupiah = (number) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number)
 }
@@ -19,7 +19,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('id-ID', options)
 }
 
-// Navigasi
+
 const nextPage = () => {
   if ((props.currentPage * props.itemsPerPage) < props.totalItems) {
     emit('changePage', props.currentPage + 1)

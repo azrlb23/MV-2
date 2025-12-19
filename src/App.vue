@@ -1,35 +1,33 @@
 <script setup>
-import { onMounted, onUnmounted, computed, watch } from 'vue' // Tambahkan onUnmounted & watch
+import { onMounted, onUnmounted, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { usePresence } from '@/composables/usePresence' // Import Presence
+import { usePresence } from '@/composables/usePresence'
 import { useRoute } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import OperatorLayout from '@/layouts/OperatorLayout.vue'
 
 const authStore = useAuthStore()
-const { initPresence, leavePresence } = usePresence() // Gunakan Presence
+const { initPresence, leavePresence } = usePresence()
 const route = useRoute()
 
 const layout = computed(() => route.meta.layout || 'auth')
 
 onMounted(async () => {
   await authStore.initialize()
-  // Jika user sudah login saat refresh, langsung init presence
   if (authStore.user) {
     initPresence()
   }
 })
 
-// Pantau perubahan user (Login/Logout)
+
 watch(() => authStore.user, (newUser) => {
   if (newUser) {
-    initPresence() // User login -> Lapor Online
+    initPresence() 
   } else {
-    leavePresence() // User logout -> Lapor Offline
+    leavePresence() 
   }
 })
 
-// Cleanup saat window ditutup
 onUnmounted(() => {
   leavePresence()
 })

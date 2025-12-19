@@ -8,7 +8,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip)
 const props = defineProps({ data: { type: Array, default: () => [] } })
 
 const chartData = computed(() => {
-  // Pastikan urutan kategori: Kecil -> Sedang -> Besar
+  
   const order = ['Kecil (<2L)', 'Sedang (2-5L)', 'Besar (>5L)']
   const sortedData = order.map(cat => {
     const found = props.data.find(d => d.category === cat)
@@ -19,7 +19,7 @@ const chartData = computed(() => {
     labels: ['Kecil', 'Sedang', 'Besar'],
     datasets: [{
       label: 'Transaksi',
-      backgroundColor: ['#fbbf24', '#34d399', '#064e3b'], // Kuning, Hijau, Hijau Tua
+      backgroundColor: ['#fbbf24', '#34d399', '#064e3b'], 
       borderRadius: 6,
       data: sortedData
     }]

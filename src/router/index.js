@@ -1,6 +1,6 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth' // Import store
+import { useAuthStore } from '@/stores/auth'
+import { supabase } from '@/lib/supabaseClient'
 import LoginView from '../views/LoginView.vue'
 
 const router = createRouter({
@@ -10,31 +10,31 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: LoginView,
-      meta: { requiresAuth: false, layout: 'auth' } // Layout Auth (Kosong)
+      meta: { requiresAuth: false, layout: 'auth' }
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
-      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' } // Pakai Sidebar
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     },
     {
       path: '/history',
       name: 'history',
       component: () => import('../views/HistoryView.vue'),
-      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' } // Pakai Sidebar
+      meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     },
     {
       path: '/operator',
       name: 'operator',
       component: () => import('../views/HomeView.vue'),
-      meta: { requiresAuth: true, role: 'operator', layout: 'operator' } // Ganti ke 'operator'
+      meta: { requiresAuth: true, role: 'operator', layout: 'operator' }
     },
     {
       path: '/operator/history',
       name: 'operator-history',
       component: () => import('../views/OperatorHistoryView.vue'),
-      meta: { requiresAuth: true, role: 'operator', layout: 'operator' } // Layout Operator
+      meta: { requiresAuth: true, role: 'operator', layout: 'operator' }
     },
     {
       path: '/laporan',
@@ -43,9 +43,9 @@ const router = createRouter({
       meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     },
     {
-      path: '/support', // Ganti path
-      name: 'support',  // Ganti name
-      component: () => import('../views/SupportView.vue'), // Load SupportView
+      path: '/support',
+      name: 'support',
+      component: () => import('../views/SupportView.vue'),
       meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
     },
     {
@@ -57,40 +57,38 @@ const router = createRouter({
   ],
 })
 
-// Navigation Guard
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // Jika user belum terload (misal saat refresh page), tunggu initialize selesai
-  if (!authStore.user && !authStore.isLoading) {
-    await authStore.initialize()
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (to.meta.requiresAuth && !session) {
+    authStore.user = null
+    authStore.role = null
+    return next({ name: 'login' })
   }
 
-  const isAuthenticated = !!authStore.user
+  if (session && !authStore.user) {
+    await authStore.initialize() 
+  }
+
   const userRole = authStore.role
 
-  // 1. Cek apakah halaman butuh login
-  if (to.meta.requiresAuth) {
-    if (!isAuthenticated) {
-      // Belum login -> lempar ke login
-      return next({ name: 'login' })
-    }
-
-    // 2. Cek Role (Jika halaman spesifik butuh role tertentu)
+    if (to.meta.requiresAuth) {
     if (to.meta.role && to.meta.role !== userRole) {
-      // Login tapi salah kamar -> kembalikan ke tempat yang sesuai
+
       if (userRole === 'manajer') return next({ name: 'dashboard' })
       if (userRole === 'operator') return next({ name: 'operator' })
+
+      await supabase.auth.signOut()
       return next({ name: 'login' }) 
     }
   }
 
-  // 3. Jika sudah login tapi buka halaman login, lempar ke dashboard masing-masing
-  if (to.name === 'login' && isAuthenticated) {
+  if (to.name === 'login' && session) {
     if (userRole === 'manajer') return next({ name: 'dashboard' })
     if (userRole === 'operator') return next({ name: 'operator' })
   }
-
   next()
 })
 

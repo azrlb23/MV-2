@@ -11,7 +11,7 @@ const chartData = computed(() => {
   return {
     labels: props.data.map(d => `Shift ${d.shift}`),
     datasets: [{
-      backgroundColor: ['#34d399', '#fbbf24', '#ffffff'], // Hijau, Kuning, Putih
+      backgroundColor: ['#34d399', '#fbbf24', '#ffffff'], 
       borderWidth: 0,
       data: props.data.map(d => d.count)
     }]
@@ -21,7 +21,7 @@ const chartData = computed(() => {
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  cutout: '65%', // Disamakan dengan Revenue Share
+  cutout: '65%', 
   plugins: { legend: { display: false } }
 }
 

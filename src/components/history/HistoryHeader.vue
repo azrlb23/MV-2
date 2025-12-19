@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  modelValue: String // Untuk v-model search
+  modelValue: String 
 })
 defineEmits(['update:modelValue'])
 </script>

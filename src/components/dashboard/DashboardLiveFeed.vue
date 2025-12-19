@@ -8,9 +8,9 @@ const props = defineProps({
   }
 })
 
-// Fungsi Helper: Format Waktu (Lebih rapi)
+
 const formatTimeAgo = (dateString) => {
-  // Gunakan waktu_pencatatan atau created_at sebagai fallback
+  
   const date = new Date(dateString)
   const now = new Date()
   const diffInMinutes = Math.floor((now - date) / (1000 * 60))
@@ -21,7 +21,7 @@ const formatTimeAgo = (dateString) => {
   const diffInHours = Math.floor(diffInMinutes / 60)
   if (diffInHours < 24) return `${diffInHours}h ago`
   
-  // Jika lebih dari 24 jam, tampilkan tanggal simpel
+  
   return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' }).format(date)
 }
 

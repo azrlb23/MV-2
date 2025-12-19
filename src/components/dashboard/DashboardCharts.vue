@@ -8,10 +8,10 @@ import {
 } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 
-// 1. Registrasi Modul Chart.js
+
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-// 2. Menerima Props dari Parent (DashboardView)
+
 const props = defineProps({
   shiftData: {
     type: Array,
@@ -23,16 +23,16 @@ const props = defineProps({
   }
 })
 
-// 3. Konfigurasi "Modern" untuk Chart (Tanpa border, rounded, cutout lebar)
+
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  cutout: '75%', // Membuat lubang tengah lebih besar (Donut tipis modern)
-  borderRadius: 20, // Membuat ujung chart membulat
-  borderWidth: 0,   // Hilangkan border putih default
+  cutout: '75%', 
+  borderRadius: 20, 
+  borderWidth: 0,   
   plugins: {
     legend: {
-      display: false // Kita buat legend custom di HTML agar lebih rapi
+      display: false 
     },
     tooltip: {
       backgroundColor: '#064e3b',
@@ -47,9 +47,9 @@ const chartOptions = {
   }
 }
 
-// 4. Data Processing: Shift Chart
+
 const shiftChartData = computed(() => {
-  // Mapping data dari backend (shift, count) ke format Chart.js
+  
   const labels = props.shiftData.map(item => `Shift ${item.shift}`)
   const dataValues = props.shiftData.map(item => item.count)
 
@@ -57,24 +57,24 @@ const shiftChartData = computed(() => {
     labels: labels,
     datasets: [
       {
-        backgroundColor: ['#34d399', '#ffffff', '#fbbf24'], // Warna: Hijau Muda, Putih, Kuning
-        data: dataValues.length ? dataValues : [1] // Fallback jika kosong
+        backgroundColor: ['#34d399', '#ffffff', '#fbbf24'], 
+        data: dataValues.length ? dataValues : [1] 
       }
     ]
   }
 })
 
-// 5. Data Processing: Vehicle Chart
+
 const vehicleChartData = computed(() => {
-  // Mapping data dari backend (label, count) ke format Chart.js
-  const labels = props.vehicleData.map(item => item.label || 'Unknown') // Pakai 'label' dari SQL alias
+  
+  const labels = props.vehicleData.map(item => item.label || 'Unknown') 
   const dataValues = props.vehicleData.map(item => item.count)
 
   return {
     labels: labels,
     datasets: [
       {
-        backgroundColor: ['#ffffff', '#34d399', '#10b981'], // Putih, Hijau Terang, Hijau Medium
+        backgroundColor: ['#ffffff', '#34d399', '#10b981'], 
         data: dataValues.length ? dataValues : [1]
       }
     ]

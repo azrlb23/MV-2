@@ -13,7 +13,7 @@ const form = ref({
   liter: ''
 })
 
-// Konstanta Harga
+
 const HARGA_PER_LITER = 10000
 
 const calculatedPrice = computed(() => {

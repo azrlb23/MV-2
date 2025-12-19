@@ -88,7 +88,7 @@ onMounted(() => { setDefaultDates(); fetchReport(); })
         :loading="loading"
         :exportLoading="exportLoading"
         @fetch="handleFetch"
-        @export="downloadExcel"
+        @export="handleExport"
       />
 
       <div v-if="exportLoading" class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">

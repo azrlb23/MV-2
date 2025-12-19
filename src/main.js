@@ -1,7 +1,6 @@
-// src/main.js
 import './assets/style.css'
-// Import CSS Toastify di sini
 import 'vue3-toastify/dist/index.css';
+import './assets/style.css' 
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

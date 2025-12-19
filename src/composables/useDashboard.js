@@ -5,7 +5,7 @@ export function useDashboard() {
   const filter = ref('today')
   const isLoading = ref(false)
   
-  // State Data Lama
+  
   const stats = ref({ volume: 0, revenue: 0, vehicle: 0 })
   const feed = ref([])
   const shiftStats = ref([])
@@ -13,10 +13,10 @@ export function useDashboard() {
   const peakHourStats = ref([]) 
   const loyalStats = ref([])    
 
-  // State Data BARU
-  const trendStats = ref([])       // Feature 1
-  const ticketSizeStats = ref([])  // Feature 2
-  const revenueShareStats = ref([]) // Feature 3
+  
+  const trendStats = ref([])       
+  const ticketSizeStats = ref([])  
+  const revenueShareStats = ref([]) 
 
   const fetchData = async () => {
     try {
@@ -40,7 +40,7 @@ export function useDashboard() {
         peakHourStats.value = data.peak_hours || []
         loyalStats.value = data.loyal_customers || []
         
-        // Assign Data Baru
+        
         trendStats.value = data.trend_7_days || []
         ticketSizeStats.value = data.ticket_size || []
         revenueShareStats.value = data.revenue_share || []
@@ -67,7 +67,7 @@ export function useDashboard() {
   return {
     filter, isLoading, stats, feed, 
     shiftStats, vehicleStats, peakHourStats, loyalStats,
-    // Return Data Baru
+    
     trendStats, ticketSizeStats, revenueShareStats
   }
 }
