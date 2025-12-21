@@ -53,7 +53,19 @@ const router = createRouter({
       name: 'team',
       component: () => import('../views/TeamView.vue'),
       meta: { requiresAuth: true, role: 'manajer', layout: 'admin' }
-    }
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/SettingsView.vue'),
+      meta: { requiresAuth: true, layout: 'admin' } 
+    },
+    {
+      path: '/operator/settings',
+      name: 'operator-settings',
+      component: () => import('../views/OperatorSettingsView.vue'), // File yang baru kita buat
+      meta: { requiresAuth: true, role: 'operator', layout: 'operator' }
+    },
   ],
 })
 
