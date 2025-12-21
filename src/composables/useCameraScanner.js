@@ -59,6 +59,30 @@ export function useCameraScanner() {
     isProcessing.value = false
   }
 
+  const validateAndFormat = (rawText) => {
+    // 1. Bersihkan: Hapus semua simbol, spasi, dan paksa huruf besar
+    // Contoh: "kt- 5476.. hj" -> "KT5476HJ"
+    const clean = rawText.replace(/[^A-Z0-9]/gi, '').toUpperCase()
+
+    // 2. REGEX (Pola) Plat Nomor Indonesia
+    // ^[A-Z]{1,2}  : Awalan 1-2 Huruf (Kode Wilayah, misal KT, B, DA)
+    // \d{1,4}      : Tengah 1-4 Angka (Nomor, misal 1234)
+    // [A-Z]{1,3}$  : Akhiran 1-3 Huruf (Seri Belakang, misal AB, XYZ)
+    const platePattern = /^([A-Z]{1,2})(\d{1,4})([A-Z]{1,3})$/
+
+    // 3. Cek apakah cocok?
+    const match = clean.match(platePattern)
+
+    if (match) {
+      // Jika COCOK, format jadi cantik: "KT 5476 HJ"
+      // match[1] = KT, match[2] = 5476, match[3] = HJ
+      return `${match[1]} ${match[2]} ${match[3]}`
+    }
+
+    // Jika TIDAK COCOK (misal: "XJ88" atau "ASPHALT"), kembalikan null
+    return null
+  }
+
   const scanPlateNumber = async (videoElement) => {
     if (!videoElement) return null
     isProcessing.value = true
@@ -71,7 +95,7 @@ export function useCameraScanner() {
     ctx.drawImage(videoElement, 0, 0)
     
     try {
-      const { data: { text } } = await Tesseract.recognize(canvas, 'eng')
+      const { data: { text } } = await Tesseract.recognize(canvas, 'eng', { tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' })
       
       // Cleanup Text
       const cleanText = text.replace(/[^A-Z0-9]/gi, '').toUpperCase()
