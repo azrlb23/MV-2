@@ -6,7 +6,7 @@ import { useExcelExport } from '@/composables/useExcelExport'
 
 // Import Komponen Compact
 import ReportHeader from '@/components/report/ReportHeader.vue'
-import ReportStats from '@/components/report/ReportStats.vue' // PAKAI YANG INI (Compact)
+import ReportStats from '@/components/report/ReportStats.vue'
 import HistoryTable from '@/components/history/HistoryTable.vue'
 
 // --- STATE ---
@@ -106,7 +106,7 @@ onMounted(() => { setDefaultDates(); fetchReport(); })
       />
     </div>
 
-    <div class="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-gray-100 shadow-sm bg-white">
+    <div class="flex-1 min-h-0 overflow-y-auto rounded-4xl relative hide-scrollbar">
       <HistoryTable 
         :transactions="transactions"
         :loading="loading"

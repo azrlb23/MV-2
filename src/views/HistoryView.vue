@@ -3,7 +3,6 @@ import HistoryHeader from '@/components/history/HistoryHeader.vue'
 import HistoryTable from '@/components/history/HistoryTable.vue'
 import { useTransactionHistory } from '@/composables/useTransactionHistory'
 
-// Menggunakan logic yang sudah di-refactor ke composable
 const { 
   transactions, 
   loading, 
@@ -20,7 +19,7 @@ const {
       <HistoryHeader v-model="searchQuery" />
     </div>
 
-    <div class="flex-1 min-h-0 overflow-y-auto rounded-2xl border border-gray-100 shadow-sm bg-white relative">
+    <div class="flex-1 min-h-0 overflow-y-auto rounded-4xl relative hide-scrollbar">
       <HistoryTable 
         :transactions="transactions"
         :loading="loading"

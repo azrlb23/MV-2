@@ -37,3 +37,14 @@ defineProps({
     <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full blur-3xl -translate-y-5 translate-x-5 pointer-events-none"></div>
   </div>
 </template>
+
+<style scoped>
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; 
+}
+</style>

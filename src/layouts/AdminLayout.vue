@@ -1,18 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import { useRouter, useRoute } from 'vue-router' // Import useRouter
+import { useRouter, useRoute } from 'vue-router' 
 import { useAuthStore } from '@/stores/auth'
 
 const isSidebarOpen = ref(false)
-const router = useRouter() // Init Router
+const router = useRouter() 
 const route = useRoute()
 const authStore = useAuthStore()
 
-// State untuk Global Search
 const globalSearch = ref('')
 
-// Data User Dinamis
 const userEmail = computed(() => authStore.user?.email || 'User')
 const userRole = computed(() => authStore.role || 'Guest')
 const userName = computed(() => userEmail.value.split('@')[0])
@@ -21,22 +19,16 @@ const handleLogout = async () => {
   await authStore.logout()
 }
 
-// FUNGSI BARU: Handle Global Search
 const handleGlobalSearch = () => {
   if (globalSearch.value.trim()) {
-    // Redirect ke halaman history dengan query parameter 'q'
     router.push({ 
       name: 'history', 
       query: { q: globalSearch.value } 
-    })
-    // Opsional: Kosongkan search bar setelah enter
-    // globalSearch.value = '' 
+    }) 
   }
 }
 
-// Menu Items... (biarkan tetap sama)
 const menuItems = [
-  // ... item menu Anda ...
   { 
     name: 'Dashboard', 
     route: '/dashboard',
@@ -75,7 +67,7 @@ const menuItems = [
     ></div>
 
     <aside 
-      class="fixed inset-y-0 left-0 z-30 w-64 bg-[#f5f5f5] p-6 transform transition-transform duration-300 ease-in-out xl:translate-x-0 xl:static border-r border-gray-200/50 flex flex-col h-full overflow-y-auto"
+      class="fixed inset-y-0 left-0 z-30 w-64 bg-[#f5f5f5] p-6 transform transition-transform duration-300 ease-in-out xl:translate-x-0 xl:static border-r border-gray-200/50 flex flex-col h-full overflow-y-auto hide-scrollbar"
       :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     >
         <div class="mb-10 flex items-center gap-3 px-2 flex-none">
@@ -157,7 +149,7 @@ const menuItems = [
         </div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative">
+      <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative hide-scrollbar">
         <slot></slot>
       </main>
 

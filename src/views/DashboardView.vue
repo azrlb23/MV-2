@@ -36,7 +36,7 @@ const {
       </div>
     </div>
 
-    <div class="flex-1 p-4 md:p-6 lg:p-8 pt-4 md:pt-6 lg:overflow-x-auto lg:overflow-y-hidden">
+    <div class="flex-1 p-4 md:p-6 lg:p-8 pt-4 md:pt-6 lg:overflow-x-auto lg:overflow-y-hidden hide-scrollbar  ">
       
       <div class="flex flex-col lg:flex-row gap-4 md:gap-6 lg:h-full items-stretch animate-enter w-full lg:w-max" style="animation-delay: 300ms">
         
@@ -66,3 +66,13 @@ const {
 
   </div>
 </template>
+<style scoped>
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; 
+}
+</style>}

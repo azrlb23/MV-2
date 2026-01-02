@@ -91,15 +91,38 @@ onMounted(() => fetchPrices())
 
           <div class="w-1/2 md:w-1/3">
             <label class="text-xs font-bold text-gray-500 uppercase block mb-1 text-right md:text-left">Harga / Liter</label>
-            <div class="relative">
-              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
-              <input 
-                v-model="item.price_per_liter"
-                type="number" 
-                class="w-full bg-white border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-mono font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#143d2e]/20 focus:border-[#143d2e] transition-all text-right md:text-left"
-              />
+            <div class="relative group">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">Rp</span>
+                
+                <input 
+                    v-model="item.price_per_liter"
+                    type="number" 
+                    class="no-spinner w-full bg-white border border-gray-200 rounded-xl pl-9 pr-8 py-2.5 text-sm font-mono font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#143d2e]/20 focus:border-[#143d2e] transition-all text-right md:text-left"
+                />
+
+                <div class="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 p-0.5 bg-gray-50 rounded-lg border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <button 
+                        @click="item.price_per_liter += 50"
+                        type="button"
+                        class="text-gray-400 hover:text-[#143d2e] hover:bg-green-100 rounded px-0.5 transition-colors"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <button 
+                        @click="item.price_per_liter -= 50"
+                        type="button"
+                        class="text-gray-400 hover:text-[#143d2e] hover:bg-green-100 rounded px-0.5 transition-colors"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-          </div>
+        </div>
 
         </div>
       </div>

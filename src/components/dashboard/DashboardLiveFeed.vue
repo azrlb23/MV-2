@@ -87,8 +87,12 @@ const formatRupiah = (val) => {
 </template>
 
 <style scoped>
-/* Scrollbar tipis agar rapi di dalam card */
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;  
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; 
+}
 </style>

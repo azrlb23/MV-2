@@ -3,7 +3,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// --- 1. IMPORT DUA PLUGIN UTAMA INI ---
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
@@ -16,7 +15,7 @@ export default defineConfig({
 
     VitePWA({
       registerType: 'autoUpdate', 
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'], 
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png'], 
       manifest: {
         name: 'Habi Jaya Management System', 
         short_name: 'Habi Jaya', 
@@ -27,12 +26,12 @@ export default defineConfig({
         orientation: 'portrait', 
         icons: [
           {
-            src: 'pwa-192x192.png', // Pastikan file ini ada di folder public
+            src: 'pwa-192x192.png', 
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png', // Pastikan file ini ada di folder public
+            src: 'pwa-512x512.png', 
             sizes: '512x512',
             type: 'image/png'
           },
