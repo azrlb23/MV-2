@@ -9,29 +9,18 @@ const loading = ref(false)
 const fullName = ref('')
 
 onMounted(() => {
-  // Ambil nama dari metadata user saat ini
   fullName.value = authStore.user?.user_metadata?.full_name || ''
 })
 
 const updateProfile = async () => {
   loading.value = true
   try {
-    // Update ke Supabase Auth Metadata
     const { data, error } = await supabase.auth.updateUser({
       data: { full_name: fullName.value }
     })
 
     if (error) throw error
 
-    // Update juga ke tabel 'profiles' jika Anda masih menggunakannya untuk Team List
-    // (Opsional, tergantung Anda masih pakai tabel profiles atau tidak)
-    /*
-    await supabase.from('profiles')
-      .update({ full_name: fullName.value })
-      .eq('id', authStore.user.id)
-    */
-
-    // Update state lokal
     authStore.user = data.user
     
     toast.success("Profil berhasil diperbarui!")

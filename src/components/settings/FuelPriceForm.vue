@@ -6,25 +6,21 @@ import { toast } from 'vue3-toastify'
 const loading = ref(false)
 const prices = ref([])
 
-// Fetch Harga Saat Ini
 const fetchPrices = async () => {
   loading.value = true
   const { data, error } = await supabase
     .from('fuel_prices')
     .select('*')
-    .order('fuel_type') // Mengurutkan berdasarkan nama (Pertalite, Solar, dst)
+    .order('fuel_type') 
   
   if (error) {
     console.error(error)
   } else {
-    // Opsional: Urutkan manual jika ingin Pertalite paling atas
-    // prices.value = data.sort(...) 
     prices.value = data
   }
   loading.value = false
 }
 
-// Simpan Perubahan
 const savePrices = async () => {
   loading.value = true
   try {

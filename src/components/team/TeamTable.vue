@@ -6,7 +6,6 @@ defineProps({
   loading: Boolean
 })
 
-// Menggunakan logic real-time dari composable
 const { onlineUserIds } = usePresence()
 
 const getRoleBadge = (role) => {
@@ -16,7 +15,6 @@ const getRoleBadge = (role) => {
     : 'bg-blue-100 text-blue-700 border-blue-200'
 }
 
-// Cek apakah user ID ada di daftar online
 const isUserOnline = (userId) => {
   return onlineUserIds.value.has(userId)
 }

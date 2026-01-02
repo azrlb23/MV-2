@@ -2,12 +2,8 @@
 import DashboardHeader from '@/components/dashboard/DashboardHeader.vue'
 import DashboardStats from '@/components/dashboard/DashboardStats.vue'
 import DashboardLiveFeed from '@/components/dashboard/DashboardLiveFeed.vue'
-
-// Import Komponen Baru (Shift & Vehicle)
 import DashboardShift from '@/components/dashboard/DashboardShift.vue'
 import DashboardVehicle from '@/components/dashboard/DashboardVehicle.vue'
-
-// Komponen Lama Lainnya
 import DashboardPeakHours from '@/components/dashboard/DashboardPeakHours.vue'
 import DashboardLoyalty from '@/components/dashboard/DashboardLoyalty.vue'
 import DashboardTrend from '@/components/dashboard/DashboardTrend.vue'

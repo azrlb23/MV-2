@@ -3,7 +3,6 @@ import HistoryHeader from '@/components/history/HistoryHeader.vue'
 import HistoryTable from '@/components/history/HistoryTable.vue'
 import { useTransactionHistory } from '@/composables/useTransactionHistory'
 
-// Gunakan composable dengan opsi dateFilter: true (Hanya Hari Ini)
 const { 
   transactions, 
   loading, 

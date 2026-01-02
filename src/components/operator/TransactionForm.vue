@@ -10,7 +10,6 @@ const props = defineProps({
 
 const emit = defineEmits(['submit', 'back'])
 
-// --- LOGIC KAMERA ---
 const { isScanning, isProcessing, stream, startCamera, stopCamera, scanPlateNumber } = useCameraScanner()
 const videoRef = ref(null)
 const isCameraFeatureEnabled = ref(false)
@@ -19,20 +18,15 @@ onMounted(() => {
   isCameraFeatureEnabled.value = localStorage.getItem('hj_pref_camera') === 'true'
 })
 
-// FUNGSI UTAMA: Membuka Kamera & Memastikan Tampil
 const handleStartCamera = async () => {
-  // 1. Dapatkan Stream dulu
   const mediaStream = await startCamera()
   
   if (mediaStream) {
-    // 2. Tunggu sampai Vue selesai merender elemen <video> (karena ada di dalam v-if)
     await nextTick() 
     
-    // 3. Pasang Stream ke Video
     if (videoRef.value) {
       videoRef.value.srcObject = mediaStream
       
-      // 4. PAKSA PLAY (PENTING! Solusi layar hitam)
       try {
         await videoRef.value.play()
       } catch (e) {
@@ -53,7 +47,6 @@ const handleScan = async () => {
     toast.warn("Coba lagi, pastikan gambar jelas.")
   }
 }
-// --------------------
 
 const form = ref({
   plat_nomor: '',

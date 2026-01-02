@@ -63,7 +63,7 @@ const router = createRouter({
     {
       path: '/operator/settings',
       name: 'operator-settings',
-      component: () => import('../views/OperatorSettingsView.vue'), // File yang baru kita buat
+      component: () => import('../views/OperatorSettingsView.vue'), 
       meta: { requiresAuth: true, role: 'operator', layout: 'operator' }
     },
   ],

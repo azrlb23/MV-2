@@ -9,10 +9,9 @@ const props = defineProps({ data: { type: Array, default: () => [] } })
 
 const chartData = computed(() => {
   return {
-    // PERBAIKAN 1: Gunakan 'd.label' (Motor/Mobil) bukan 'd.shift'
     labels: props.data.map(d => d.label),
     datasets: [{
-      backgroundColor: ['#ffffff', '#34d399', '#10b981'], // Putih, Hijau Muda, Hijau Tua
+      backgroundColor: ['#ffffff', '#34d399', '#10b981'],
       borderWidth: 0,
       data: props.data.map(d => d.count)
     }]

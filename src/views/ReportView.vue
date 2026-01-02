@@ -3,27 +3,22 @@ import { ref, onMounted, watch } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 import { toast } from 'vue3-toastify'
 import { useExcelExport } from '@/composables/useExcelExport'
-
-// Import Komponen Compact
 import ReportHeader from '@/components/report/ReportHeader.vue'
 import ReportStats from '@/components/report/ReportStats.vue'
 import HistoryTable from '@/components/history/HistoryTable.vue'
 
-// --- STATE ---
 const startDate = ref('')
 const endDate = ref('')
 const loading = ref(false)
 const stats = ref({ volume: 0, revenue: 0, vehicle: 0 })
 const transactions = ref([])
 
-// Pagination
 const currentPage = ref(1)
 const itemsPerPage = 10
 const totalItems = ref(0)
 
 const { exportLoading, progress, downloadExcel } = useExcelExport()
 
-// --- ACTIONS ---
 const setDefaultDates = () => {
   const date = new Date()
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)

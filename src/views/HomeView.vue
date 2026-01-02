@@ -5,14 +5,11 @@ import TransactionForm from '@/components/operator/TransactionForm.vue'
 import TransactionSuccess from '@/components/operator/TransactionSuccess.vue'
 import { useTransactionAction } from '@/composables/useTransactionAction'
 
-// UI State
 const step = ref(1)
 const selectedVehicle = ref('')
 
-// Logic State (Dari Composable)
 const { loading, submitTransaction } = useTransactionAction()
 
-// Actions UI Flow
 const handleVehicleSelect = (type) => {
   selectedVehicle.value = type
   step.value = 2
@@ -28,7 +25,6 @@ const handleReset = () => {
   step.value = 1
 }
 
-// Handler Process
 const handleProcess = async (formData) => {
   const success = await submitTransaction(formData, selectedVehicle.value)
   if (success) {

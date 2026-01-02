@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { toast } from 'vue3-toastify'
 
 import SupportForm from '@/components/support/SupportForm.vue'
-import SupportContactCard from '@/components/support/SupportContactCard.vue' // Pastikan sudah diimport
+import SupportContactCard from '@/components/support/SupportContactCard.vue'
 
 const authStore = useAuthStore()
 const loading = ref(false)

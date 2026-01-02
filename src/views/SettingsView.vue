@@ -2,14 +2,11 @@
 import { useAuthStore } from '@/stores/auth'
 import ProfileCard from '@/components/settings/ProfileCard.vue'
 import SecurityForm from '@/components/settings/SecurityForm.vue'
-
-// Import Komponen Baru
 import FuelPriceForm from '@/components/settings/FuelPriceForm.vue'
 import ProfileForm from '@/components/settings/ProfileForm.vue'
 import ShiftForm from '@/components/settings/ShiftForm.vue'
 
 const authStore = useAuthStore()
-// Cek apakah user adalah manajer
 const isManager = authStore.role === 'manajer'
 </script>
 

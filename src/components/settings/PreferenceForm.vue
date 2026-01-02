@@ -5,17 +5,14 @@ import { toast } from 'vue3-toastify'
 const useCamera = ref(false)
 
 onMounted(() => {
-  // Ambil status terakhir dari penyimpanan lokal
   useCamera.value = localStorage.getItem('hj_pref_camera') === 'true'
 })
 
 const toggleCamera = () => {
-  // Simpan ke localStorage agar diingat browser
   localStorage.setItem('hj_pref_camera', useCamera.value)
   
   if (useCamera.value) {
     toast.success("Mode Scan Kamera: AKTIF")
-    // Opsional: Cek izin kamera saat itu juga
     navigator.mediaDevices.getUserMedia({ video: true }).catch(() => {
        toast.error("Izin kamera ditolak browser")
        useCamera.value = false

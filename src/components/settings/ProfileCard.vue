@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
-// Ambil nama dari email jika nama lengkap kosong
 const displayName = computed(() => {
   return authStore.user?.user_metadata?.full_name || authStore.user?.email?.split('@')[0] || 'Operator'
 })

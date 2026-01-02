@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
-const router = useRouter() // Tambahkan router untuk navigasi
+const router = useRouter()
 
 const userEmail = computed(() => authStore.user?.email || 'Operator')
 const userName = computed(() => userEmail.value.split('@')[0])

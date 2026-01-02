@@ -5,9 +5,8 @@ import PreferenceForm from '@/components/settings/PreferenceForm.vue'
 
 const router = useRouter()
 
-// Fungsi Navigasi Kembali
 const goBack = () => {
-  router.push('/operator') // Kembali ke dashboard operator
+  router.push('/operator') 
 }
 </script>
 

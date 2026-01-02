@@ -6,7 +6,6 @@ import { toast } from 'vue3-toastify'
 const loading = ref(false)
 const shifts = ref([])
 
-// Fetch Data Shift
 const fetchShifts = async () => {
   loading.value = true
   const { data, error } = await supabase
@@ -17,13 +16,11 @@ const fetchShifts = async () => {
   if (error) {
     console.error(error)
   } else {
-    // Sort agar urutan Shift 1 -> 2 -> 3
     shifts.value = data.sort((a, b) => a.shift_name.localeCompare(b.shift_name))
   }
   loading.value = false
 }
 
-// Simpan Perubahan
 const saveShifts = async () => {
   loading.value = true
   try {

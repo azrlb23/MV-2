@@ -7,7 +7,6 @@ export function useExcelExport() {
   const exportLoading = ref(false)
   const progress = ref(0)
 
-  // Helper Formatter
   const formatDate = (date) => new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 
   const downloadExcel = async (startDate, endDate) => {
@@ -25,7 +24,6 @@ export function useExcelExport() {
       let pageSize = 1000 
       let hasMore = true
 
-      // Teknik Chunking (Ambil data bertahap)
       while (hasMore) {
         const from = page * pageSize
         const to = from + pageSize - 1
@@ -54,7 +52,6 @@ export function useExcelExport() {
         return
       }
 
-      // Format Data
       const formattedData = allData.map(item => ({
         'ID': item.id,
         'Waktu': formatDate(item.waktu_pencatatan),
@@ -65,7 +62,6 @@ export function useExcelExport() {
         'Operator': item.operator_id || '-'
       }))
 
-      // Buat File Excel
       const worksheet = XLSX.utils.json_to_sheet(formattedData)
       const colWidths = [{wch:8}, {wch:22}, {wch:10}, {wch:15}, {wch:12}, {wch:15}, {wch:30}]
       worksheet['!cols'] = colWidths
