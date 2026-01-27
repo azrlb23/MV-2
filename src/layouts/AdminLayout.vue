@@ -12,7 +12,8 @@ const authStore = useAuthStore()
 const globalSearch = ref('')
 
 const userEmail = computed(() => authStore.user?.email || 'User')
-const userRole = computed(() => authStore.role || 'Guest')
+// You might want to get the actual role from authStore if available, or default to Guest/Administrator
+const userRole = computed(() => authStore.role || 'Administrator') 
 const userName = computed(() => userEmail.value.split('@')[0])
 
 const handleLogout = async () => {
@@ -138,15 +139,26 @@ const menuItems = [
           />
         </div>
 
-        <div class="flex items-center gap-3 flex-none">
-          <div class="hidden text-right lg:block">
-            <p class="text-sm font-bold leading-tight capitalize">{{ userName }}</p>
-            <p class="text-xs text-gray-500">Administrator</p>
-          </div>
-          <div class="w-10 h-10 md:w-12 md:h-12 bg-gray-300 rounded-full border-2 border-white shadow-sm flex items-center justify-center font-bold text-gray-600">
-             {{ userName.charAt(0).toUpperCase() }}
+        <div class="flex items-center gap-3 flex-none ml-auto">
+          <div 
+            @click="router.push('/settings')"
+            class="flex items-center gap-3 bg-white pl-1.5 pr-4 py-1.5 rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-95 select-none"
+          >
+            <div class="w-9 h-9 bg-gradient-to-br from-[#143d2e] to-[#258f62] rounded-full flex items-center justify-center text-white font-bold text-sm shadow-inner ring-2 ring-white">
+               {{ userName.charAt(0).toUpperCase() }}
+            </div>
+            
+            <div class="hidden xs:block text-left">
+              <p class="text-sm font-bold leading-tight text-gray-800 capitalize">{{ userName }}</p>
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">{{ userRole }}</p>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-gray-400 hidden sm:block">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
           </div>
         </div>
+
       </header>
 
       <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 relative hide-scrollbar">

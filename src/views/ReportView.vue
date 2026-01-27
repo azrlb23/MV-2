@@ -73,7 +73,7 @@ onMounted(() => { setDefaultDates(); fetchReport(); })
 </script>
 
 <template>
-  <div class="flex flex-col h-full gap-4 animate-enter overflow-hidden">
+  <div class="flex flex-col gap-4 animate-enter pb-24">
     
     <div class="flex-none flex flex-col gap-4">
       
@@ -101,7 +101,7 @@ onMounted(() => { setDefaultDates(); fetchReport(); })
       />
     </div>
 
-    <div class="flex-1 min-h-0 overflow-y-auto rounded-4xl relative hide-scrollbar">
+    <div class="rounded-4xl relative">
       <HistoryTable 
         :transactions="transactions"
         :loading="loading"

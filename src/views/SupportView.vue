@@ -50,27 +50,33 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 animate-enter pb-10">
+  <div class="flex flex-col gap-6 animate-enter bg-[#f8fafc] lg:bg-transparent pb-24">
     
-    <div>
-      <h2 class="text-3xl font-extrabold text-black tracking-tight">Pusat Bantuan IT</h2>
-      <p class="text-gray-500 text-sm">Laporkan kendala sistem atau ajukan permintaan fitur baru.</p>
+    <div class="flex-none px-6 pt-6 md:px-8 md:pt-8 z-10">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-[#1e293b] tracking-tight mb-2">
+        Pusat Bantuan IT
+      </h2>
+      <p class="text-slate-500 font-medium text-sm md:text-base max-w-2xl">
+        Laporkan kendala sistem atau ajukan permintaan fitur baru.
+      </p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      
-      <div class="lg:col-span-2">
-        <SupportForm 
-          v-model="form" 
-          :loading="loading" 
-          @submit="handleSubmit" 
-        />
-      </div>
+    <div class="px-4 md:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+        
+        <div class="lg:col-span-2">
+          <SupportForm 
+            v-model="form" 
+            :loading="loading" 
+            @submit="handleSubmit" 
+          />
+        </div>
 
-      <div>
-        <SupportContactCard />
-      </div>
+        <div>
+          <SupportContactCard />
+        </div>
 
+      </div>
     </div>
   </div>
 </template>
