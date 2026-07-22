@@ -34,27 +34,27 @@ const {
 
     <div class="flex-1 p-4 md:p-6 lg:p-8 pt-4 md:pt-6">
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-enter w-full pb-12" style="animation-delay: 300ms">
+      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 animate-enter w-full pb-12" style="animation-delay: 300ms">
         
-        <div class="md:hidden w-full">
+        <div class="lg:col-span-2 xl:col-span-3 md:hidden w-full">
            <DashboardStats :stats="stats" :filter="filter" :loading="isLoading" />
         </div>
         
-        <DashboardLiveFeed :items="feed" class="w-full" />
+        <DashboardLiveFeed :items="feed" class="w-full xl:col-span-1" />
 
-        <DashboardTrend :data="trendStats" class="w-full" />
+        <DashboardTrend :data="trendStats" class="w-full xl:col-span-2" />
 
-        <DashboardRevenueShare :data="revenueShareStats" class="w-full" />
+        <DashboardRevenueShare :data="revenueShareStats" class="w-full xl:col-span-1" />
 
-        <DashboardShift :data="shiftStats" class="w-full" />
+        <DashboardShift :data="shiftStats" class="w-full xl:col-span-1" />
 
-        <DashboardVehicle :data="vehicleStats" class="w-full" />
+        <DashboardVehicle :data="vehicleStats" class="w-full xl:col-span-1" />
 
-        <DashboardTicketSize :data="ticketSizeStats" class="w-full" />
+        <DashboardPeakHours :data="peakHourStats" class="w-full xl:col-span-2" />
 
-        <DashboardPeakHours :data="peakHourStats" class="w-full" />
+        <DashboardTicketSize :data="ticketSizeStats" class="w-full xl:col-span-1" />
 
-        <DashboardLoyalty :customers="loyalStats" class="w-full" />
+        <DashboardLoyalty :customers="loyalStats" class="w-full xl:col-span-1" />
         
       </div>
     </div>
