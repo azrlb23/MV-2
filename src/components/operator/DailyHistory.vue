@@ -11,11 +11,15 @@ const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'currency'
 const fetchTodayHistory = async () => {
   loading.value = true
   try {
-    const today = new Date().toISOString().split('T')[0]
+    const now = new Date()
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).toISOString()
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999).toISOString()
+
     let query = supabase
       .from('transaksi_pertalite')
       .select('*')
-      .gte('waktu_pencatatan', `${today}T00:00:00`)
+      .gte('waktu_pencatatan', startOfDay)
+      .lte('waktu_pencatatan', endOfDay)
       .order('waktu_pencatatan', { ascending: false })
 
     if (searchQuery.value) {

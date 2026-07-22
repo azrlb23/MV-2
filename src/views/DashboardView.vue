@@ -7,7 +7,6 @@ import DashboardVehicle from '@/components/dashboard/DashboardVehicle.vue'
 import DashboardPeakHours from '@/components/dashboard/DashboardPeakHours.vue'
 import DashboardLoyalty from '@/components/dashboard/DashboardLoyalty.vue'
 import DashboardTrend from '@/components/dashboard/DashboardTrend.vue'
-import DashboardTicketSize from '@/components/dashboard/DashboardTicketSize.vue'
 import DashboardRevenueShare from '@/components/dashboard/DashboardRevenueShare.vue'
 
 import { useDashboard } from '@/composables/useDashboard'
@@ -15,7 +14,7 @@ import { useDashboard } from '@/composables/useDashboard'
 const { 
   filter, stats, feed, 
   vehicleStats, shiftStats, peakHourStats, loyalStats,
-  trendStats, ticketSizeStats, revenueShareStats,
+  trendStats, revenueShareStats,
   isLoading 
 } = useDashboard()
 </script>
@@ -51,8 +50,6 @@ const {
         <DashboardVehicle :data="vehicleStats" class="w-full xl:col-span-1" />
 
         <DashboardPeakHours :data="peakHourStats" class="w-full xl:col-span-2" />
-
-        <DashboardTicketSize :data="ticketSizeStats" class="w-full xl:col-span-1" />
 
         <DashboardLoyalty :customers="loyalStats" class="w-full xl:col-span-1" />
         

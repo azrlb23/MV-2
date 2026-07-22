@@ -11,7 +11,7 @@ const goBack = () => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-[#f8fafc]">
+  <div class="flex flex-col h-full bg-[#f5f5f5]">
     
     <div class="flex-none px-6 py-5 bg-white border-b border-gray-100 flex items-center gap-4 sticky top-0 z-10">
       <button 
