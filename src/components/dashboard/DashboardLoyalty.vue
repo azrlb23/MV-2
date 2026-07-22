@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-[300px] md:min-w-[350px] relative overflow-hidden">
+  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-0 relative overflow-hidden">
     
     <div class="flex justify-between items-center mb-4 z-10">
       <h4 class="font-bold text-lg text-gray-800 tracking-tight">Pelanggan Setia</h4>

@@ -31,7 +31,7 @@ const totalRevenue = computed(() => props.data.reduce((acc, curr) => acc + curr.
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-[#143d2e] to-[#064e3b] rounded-[2rem] p-6 text-white shadow-xl shadow-green-900/20 flex flex-col h-full min-w-[280px] md:min-w-[320px] relative overflow-hidden">
+  <div class="bg-gradient-to-br from-[#143d2e] to-[#064e3b] rounded-[2rem] p-6 text-white shadow-xl shadow-green-900/20 flex flex-col h-full min-w-0 relative overflow-hidden">
     <div class="flex justify-between items-center mb-4 z-10">
       <h4 class="font-bold text-lg tracking-tight">Revenue Share</h4>
       <span class="bg-white/10 px-2 py-1 rounded-full text-[10px]">Rp</span>

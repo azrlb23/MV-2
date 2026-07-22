@@ -51,7 +51,7 @@ const chartOptions = {
 </script>
 
 <template>
-  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-[300px] md:min-w-[400px]">
+  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-0">
     <div class="flex justify-between items-center mb-2">
       <h4 class="font-bold text-lg text-gray-800 tracking-tight">Tren 7 Hari</h4>
       <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-full">Revenue</span>

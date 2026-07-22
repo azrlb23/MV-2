@@ -50,7 +50,7 @@ const chartOptions = {
 </script>
 
 <template>
-  <div class="bg-gradient-to-br from-[#143d2e] to-[#1e5c45] rounded-[2rem] p-6 text-white shadow-xl shadow-green-900/20 flex flex-col relative overflow-hidden h-full min-w-[350px] md:min-w-[400px]">
+  <div class="bg-gradient-to-br from-[#143d2e] to-[#1e5c45] rounded-[2rem] p-6 text-white shadow-xl shadow-green-900/20 flex flex-col relative overflow-hidden h-full min-w-0">
     
     <div class="flex justify-between items-center mb-4 z-10">
       <h4 class="font-bold text-lg tracking-tight">Analisis Jam Sibuk</h4>

@@ -38,7 +38,7 @@ const chartOptions = {
 </script>
 
 <template>
-  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-[250px] md:min-w-[300px]">
+  <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex flex-col h-full min-w-0">
     <h4 class="font-bold text-lg text-gray-800 tracking-tight mb-4">Distribusi Pengisian</h4>
     <div class="flex-1 w-full min-h-[150px]">
       <Bar :data="chartData" :options="chartOptions" />
