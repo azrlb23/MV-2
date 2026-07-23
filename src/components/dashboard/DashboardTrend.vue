@@ -39,13 +39,22 @@ const chartData = computed(() => {
   }
 })
 
+const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val)
+
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  plugins: { legend: { display: false } },
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      callbacks: {
+        label: (context) => `Pendapatan: ${formatRupiah(context.raw || 0)}`
+      }
+    }
+  },
   scales: {
     x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-    y: { display: false } 
+    y: { display: false, beginAtZero: true } 
   }
 }
 </script>

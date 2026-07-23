@@ -12,7 +12,7 @@ import DashboardRevenueShare from '@/components/dashboard/DashboardRevenueShare.
 import { useDashboard } from '@/composables/useDashboard'
 
 const { 
-  filter, stats, feed, 
+  filter, setFilter, stats, feed, 
   vehicleStats, shiftStats, peakHourStats, loyalStats,
   trendStats, revenueShareStats,
   isLoading 
@@ -24,7 +24,7 @@ const {
     
     <div class="flex-none flex flex-col gap-4 p-4 pb-0 md:p-6 md:pb-0 lg:p-8 lg:pb-0 z-10">
       <div class="animate-enter" style="animation-delay: 100ms">
-        <DashboardHeader v-model="filter" />
+        <DashboardHeader :model-value="filter" @update:model-value="setFilter" />
       </div>
       <div class="hidden md:block animate-enter" style="animation-delay: 200ms">
         <DashboardStats :stats="stats" :filter="filter" :loading="isLoading" />
@@ -67,4 +67,4 @@ const {
 .custom-scrollbar::-webkit-scrollbar {
   display: none; 
 }
-</style>}
+</style>

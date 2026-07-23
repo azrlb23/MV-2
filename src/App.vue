@@ -12,8 +12,9 @@ const route = useRoute()
 
 const layout = computed(() => route.meta.layout || 'auth')
 
-onMounted(async () => {
-  await authStore.initialize()
+onMounted(() => {
+  // initialize() sudah ditangani oleh router guard (beforeEach)
+  // sehingga tidak perlu dipanggil lagi di sini untuk menghindari race condition
   if (authStore.user) {
     initPresence()
   }

@@ -1,5 +1,9 @@
 <script setup>
+import { ref } from 'vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
+import ContactAdminModal from '@/components/auth/ContactAdminModal.vue'
+
+const isContactModalOpen = ref(false)
 </script>
 
 <template>
@@ -71,9 +75,14 @@ import LoginForm from '@/components/auth/LoginForm.vue'
 
           <p class="text-center text-sm text-green-200/80 lg:text-gray-400 font-medium">
             Butuh bantuan akses? 
-            <a href="#" class="font-bold text-white lg:text-[#143d2e] hover:underline transition-all">
+            <button
+              id="btn-contact-admin"
+              type="button"
+              class="font-bold text-white lg:text-[#143d2e] hover:underline transition-all bg-transparent border-none cursor-pointer p-0"
+              @click="isContactModalOpen = true"
+            >
               Hubungi Admin
-            </a>
+            </button>
           </p>
 
         </div>
@@ -82,4 +91,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
     </div>
 
   </div>
+
+  <!-- Modal Hubungi Admin -->
+  <ContactAdminModal :is-open="isContactModalOpen" @close="isContactModalOpen = false" />
 </template>

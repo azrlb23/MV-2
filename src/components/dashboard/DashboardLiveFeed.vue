@@ -35,8 +35,7 @@ const formatRupiah = (val) => {
     
     <div class="flex justify-between items-center mb-4 z-10">
       <h4 class="font-bold text-lg text-gray-800 tracking-tight">Live Transaction</h4>
-      <span class="bg-green-100 px-3 py-1 rounded-full text-[10px] font-bold text-green-800 uppercase tracking-wider flex items-center gap-1.5">
-        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+      <span class="bg-green-100 px-3 py-1 rounded-full text-[10px] font-bold text-green-800 uppercase tracking-wider">
         Realtime
       </span>
     </div>

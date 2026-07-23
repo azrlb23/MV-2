@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { toast } from 'vue3-toastify'
 import { useCameraScanner } from '@/composables/useCameraScanner'
 import { useTransactionAction } from '@/composables/useTransactionAction'
@@ -17,6 +17,7 @@ const { checkPlateStatus, checkingPlate } = useTransactionAction()
 const videoRef = ref(null)
 const platInputRef = ref(null)
 const literInputRef = ref(null)
+const hargaInputRef = ref(null)
 
 const isCameraFeatureEnabled = ref(false)
 
@@ -26,8 +27,68 @@ const refueledInfo = ref(null)
 
 const form = ref({
   plat_nomor: '',
-  liter: ''
+  liter: '',
+  totalHarga: ''
 })
+
+// Menentukan kolom mana yang terakhir diedit agar tidak terjadi loop
+const lastEdited = ref('liter') // 'liter' | 'harga'
+
+// ─── Validasi Plat Nomor Indonesia ───────────────────────────────────────────
+// Format: [1-2 huruf kode wilayah] [spasi] [1-4 angka] [spasi opsional] [1-3 huruf akhir]
+// Contoh valid: KT 1234 AB, B 1234 CD, DK 123 A
+const PLAT_REGEX = /^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{1,3}$/
+
+const platError = ref('')  // pesan error validasi
+const platTouched = ref(false)  // apakah user sudah pernah mengetik
+
+// Status visual kolom plat
+const platStatus = computed(() => {
+  if (!platTouched.value || !form.value.plat_nomor) return 'idle'
+  return PLAT_REGEX.test(form.value.plat_nomor.replace(/\s+/g, ' ').trim()) ? 'valid' : 'invalid'
+})
+
+// Sanitasi & auto-format input plat saat mengetik
+const onPlatInput = (e) => {
+  platTouched.value = true
+
+  // Hanya izinkan huruf, angka, dan spasi — buang karakter lain
+  let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, '')
+
+  // Hindari spasi ganda dan spasi di awal
+  raw = raw.replace(/\s{2,}/g, ' ').replace(/^\s/, '')
+
+  form.value.plat_nomor = raw
+
+  // Paksa DOM langsung sinkron agar karakter terlarang tidak sempat terlihat
+  e.target.value = raw
+
+  // Update pesan error
+  const cleaned = raw.replace(/\s+/g, ' ').trim()
+  if (!cleaned) {
+    platError.value = ''
+  } else if (!PLAT_REGEX.test(cleaned)) {
+    platError.value = 'Format tidak valid. Contoh: KT 1234 AB'
+  } else {
+    platError.value = ''
+  }
+}
+
+// Blokir karakter terlarang di level keydown — sebelum sempat masuk DOM
+const ALLOWED_KEYS = new Set([
+  'Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight',
+  'ArrowUp', 'ArrowDown', 'Home', 'End', ' ', 'Enter',
+])
+
+const onPlatKeydown = (e) => {
+  if (e.ctrlKey || e.metaKey) return
+  if (ALLOWED_KEYS.has(e.key)) return
+  if (/^[a-zA-Z]$/.test(e.key)) return
+  if (/^[0-9]$/.test(e.key)) return
+
+  // Blokir semua karakter lainnya (simbol: = - _ ! @ # $ % dll)
+  e.preventDefault()
+}
 
 onMounted(() => {
   isCameraFeatureEnabled.value = localStorage.getItem('hj_pref_camera') === 'true'
@@ -39,22 +100,35 @@ onMounted(() => {
 })
 
 const handleCheckPlate = async () => {
-  if (!form.value.plat_nomor || !form.value.plat_nomor.trim()) {
-    toast.warn("Mohon masukkan nomor plat kendaraan!")
+  platTouched.value = true
+  const cleaned = form.value.plat_nomor.replace(/\s+/g, ' ').trim()
+
+  if (!cleaned) {
+    platError.value = 'Mohon masukkan nomor plat kendaraan'
+    toast.warn('Mohon masukkan nomor plat kendaraan!')
     return
   }
+
+  if (!PLAT_REGEX.test(cleaned)) {
+    platError.value = 'Format plat tidak valid. Contoh: KT 1234 AB'
+    toast.warn('Format plat nomor tidak valid!')
+    return
+  }
+
+  form.value.plat_nomor = cleaned
+  platError.value = ''
 
   const res = await checkPlateStatus(form.value.plat_nomor)
   if (res.success) {
     form.value.plat_nomor = res.plat
     if (res.hasRefueledToday) {
-      // JIKA SUDAH MENGISI: Tampilkan Modal Popup Peringatan & JANGAN ke form input liter
       refueledInfo.value = res
       showRefueledModal.value = true
     } else {
-      // JIKA BELUM MENGISI: Lanjut ke form input liter
       subStep.value = 'input_liter'
       form.value.liter = ''
+      form.value.totalHarga = ''
+      lastEdited.value = 'liter'
       await nextTick()
       if (literInputRef.value) {
         literInputRef.value.focus()
@@ -68,7 +142,7 @@ const handleResetPlateCheck = () => {
   refueledInfo.value = null
   form.value.plat_nomor = ''
   subStep.value = 'check_plate'
-  emit('back') // Langsung kembali ke halaman pilih Motor atau Mobil
+  emit('back')
 }
 
 const handleBackToPlateCheck = () => {
@@ -88,7 +162,6 @@ const handleStartCamera = async () => {
     
     if (videoRef.value) {
       videoRef.value.srcObject = mediaStream
-      
       try {
         await videoRef.value.play()
       } catch (e) {
@@ -111,7 +184,7 @@ const handleScan = async () => {
   }
 }
 
-const HARGA_PER_LITER = 10000 
+const HARGA_PER_LITER = 10000
 
 const calculatedPrice = computed(() => {
   const liter = parseFloat(form.value.liter) || 0
@@ -122,16 +195,73 @@ const formatRupiah = (val) => {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val)
 }
 
+const formatAngka = (val) => {
+  if (!val && val !== 0) return ''
+  return new Intl.NumberFormat('id-ID').format(val)
+}
+
+const parseRupiah = (str) => {
+  return parseFloat(String(str).replace(/[^\d]/g, '')) || 0
+}
+
+watch(() => form.value.liter, (val) => {
+  if (lastEdited.value !== 'liter') return
+  const liter = parseFloat(val) || 0
+  form.value.totalHarga = liter > 0 ? formatAngka(liter * HARGA_PER_LITER) : ''
+})
+
+watch(() => form.value.totalHarga, (val) => {
+  if (lastEdited.value !== 'harga') return
+  const harga = parseRupiah(val)
+  form.value.liter = harga > 0 ? String((harga / HARGA_PER_LITER).toFixed(2)) : ''
+})
+
+const ALLOWED_NUMERIC_KEYS = new Set([
+  'Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight',
+  'Home', 'End', 'Enter'
+])
+
+const onHargaKeydown = (e) => {
+  if (e.ctrlKey || e.metaKey) return
+  if (ALLOWED_NUMERIC_KEYS.has(e.key)) return
+  if (/^[0-9]$/.test(e.key)) return
+
+  // Blokir huruf, simbol, dan spasi
+  e.preventDefault()
+}
+
+const onLiterKeydown = (e) => {
+  if (e.ctrlKey || e.metaKey) return
+  if (ALLOWED_NUMERIC_KEYS.has(e.key)) return
+  if (/^[0-9.]$/.test(e.key)) return
+
+  // Blokir huruf dan simbol selain angka dan titik desimal
+  e.preventDefault()
+}
+
+const onHargaInput = (e) => {
+  lastEdited.value = 'harga'
+  const raw = parseRupiah(e.target.value)
+  const formatted = raw > 0 ? formatAngka(raw) : ''
+  form.value.totalHarga = formatted
+  e.target.value = formatted
+}
+
+const onLiterInput = () => {
+  lastEdited.value = 'liter'
+}
+
 const handleSubmit = () => {
-  if (!form.value.liter || parseFloat(form.value.liter) <= 0) {
-    toast.warn("Mohon masukkan jumlah liter!")
+  const liter = parseFloat(form.value.liter)
+  if (!liter || liter <= 0) {
+    toast.warn('Mohon masukkan jumlah liter atau total harga!')
     return
   }
 
   emit('submit', {
     plat_nomor: form.value.plat_nomor,
     liter: form.value.liter,
-    total_harga: calculatedPrice.value
+    total_harga: liter * HARGA_PER_LITER
   })
 }
 </script>
@@ -139,7 +269,7 @@ const handleSubmit = () => {
 <template>
   <div class="w-full max-w-lg mx-auto animate-enter relative">
     
-    <!-- HEADER BAR (TOMBOL KEMBALI HANYA IKON BESAR) -->
+    <!-- HEADER BAR -->
     <div class="flex items-center justify-between mb-4 md:mb-6">
       <button 
         @click="$emit('back')" 
@@ -163,15 +293,48 @@ const handleSubmit = () => {
       </div>
 
       <div class="space-y-4">
-        <div class="flex gap-2 items-stretch">
-          <input 
-            ref="platInputRef"
-            v-model="form.plat_nomor"
-            type="text" 
-            placeholder="KT 0000 XX"
-            @keydown.enter.prevent="handleCheckPlate"
-            class="flex-1 w-full h-16 bg-white/10 border-2 border-white/30 rounded-2xl px-4 py-3 text-2xl font-black uppercase tracking-wider text-white text-center placeholder-white/30 focus:outline-none focus:bg-white/20 focus:border-white transition-all shadow-inner"
-          />
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-2 items-stretch">
+            <input 
+              ref="platInputRef"
+              :value="form.plat_nomor"
+              @input="onPlatInput"
+              @keydown="onPlatKeydown"
+              @keydown.enter.prevent="handleCheckPlate"
+              type="text"
+              maxlength="10"
+              placeholder="KT 1234 AB"
+              autocomplete="off"
+              spellcheck="false"
+              class="flex-1 w-full h-16 bg-white/10 border-2 rounded-2xl px-4 py-3 text-2xl font-black uppercase tracking-wider text-white text-center placeholder-white/30 focus:outline-none focus:bg-white/20 transition-all shadow-inner"
+              :class="{
+                'border-white/30 focus:border-white': platStatus === 'idle',
+                'border-emerald-400 focus:border-emerald-300': platStatus === 'valid',
+                'border-red-400 focus:border-red-300': platStatus === 'invalid'
+              }"
+            />
+          </div>
+
+          <!-- Feedback validasi -->
+          <Transition name="plat-err">
+            <div v-if="platError" class="flex items-center gap-2 px-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-red-400 shrink-0">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-red-300 text-xs font-semibold">{{ platError }}</span>
+            </div>
+            <div v-else-if="platStatus === 'valid'" class="flex items-center gap-2 px-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 text-emerald-400 shrink-0">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-emerald-300 text-xs font-semibold">Format plat valid</span>
+            </div>
+          </Transition>
+
+          <!-- Format hint -->
+          <p class="text-white/35 text-[10px] text-center tracking-wide">
+            Format: <span class="font-bold text-white/50">KT 1234 AB</span> &nbsp;·&nbsp; Kode Wilayah + Angka + Huruf Akhir
+          </p>
         </div>
 
         <div class="flex gap-3">
@@ -206,7 +369,7 @@ const handleSubmit = () => {
       </div>
     </div>
 
-    <!-- TAHAP 2: INPUT LITER & TRANSAKSI (HANYA DITAMPILKAN JIKA BELUM MENGISI) -->
+    <!-- TAHAP 2: INPUT LITER & TRANSAKSI -->
     <form v-else-if="subStep === 'input_liter'" @submit.prevent="handleSubmit" class="space-y-5 animate-enter">
       
       <!-- Info Plat Terverifikasi -->
@@ -232,28 +395,50 @@ const handleSubmit = () => {
         </button>
       </div>
 
-      <!-- Input Liter & Total Harga -->
+      <!-- Input Liter & Total Harga (2 arah) -->
       <div class="grid grid-cols-2 gap-3 md:gap-4">
+        <!-- Kolom Liter -->
         <div class="space-y-1.5">
-          <label class="text-green-100 text-xs md:text-sm font-bold ml-1 uppercase">Jumlah Liter</label>
+          <label class="text-green-100 text-xs md:text-sm font-bold ml-1 uppercase flex items-center gap-1">
+            Jumlah Liter
+            <span class="text-white/40 font-normal normal-case text-[10px]">(L)</span>
+          </label>
           <input 
             ref="literInputRef"
-            v-model="form.liter" 
+            v-model="form.liter"
+            @input="onLiterInput"
+            @keydown="onLiterKeydown"
             type="number" 
-            step="0.01" 
-            placeholder="0.0" 
-            class="w-full bg-white/10 border-2 border-white/30 rounded-2xl px-4 py-3 md:py-4 text-xl md:text-2xl font-black text-white placeholder-white/30 focus:outline-none focus:bg-white/20 focus:border-white text-center"
-            required
+            step="0.01"
+            min="0"
+            placeholder="0.00" 
+            class="w-full bg-white/10 border-2 border-white/30 rounded-2xl px-4 py-3 md:py-4 text-xl md:text-2xl font-black text-white placeholder-white/30 focus:outline-none focus:bg-white/20 focus:border-white text-center transition-all"
           />
         </div>
         
+        <!-- Kolom Total Harga -->
         <div class="space-y-1.5">
-          <label class="text-green-100 text-xs md:text-sm font-bold ml-1 uppercase">Total (Rp)</label>
-          <div class="w-full bg-black/30 border border-white/20 rounded-2xl px-3 py-3 md:py-4 text-lg md:text-xl font-black text-white text-center flex items-center justify-center h-[56px] md:h-[64px]">
-            {{ formatRupiah(calculatedPrice) }}
-          </div>
+          <label class="text-green-100 text-xs md:text-sm font-bold ml-1 uppercase flex items-center gap-1">
+            Total (Rp)
+            <span class="text-white/40 font-normal normal-case text-[10px]">(opsional)</span>
+          </label>
+          <input
+            ref="hargaInputRef"
+            :value="form.totalHarga"
+            @input="onHargaInput"
+            @keydown="onHargaKeydown"
+            type="text"
+            inputmode="numeric"
+            placeholder="0"
+            class="w-full bg-white/10 border-2 border-white/30 rounded-2xl px-4 py-3 md:py-4 text-xl md:text-2xl font-black text-white placeholder-white/30 focus:outline-none focus:bg-white/20 focus:border-white text-center transition-all"
+          />
         </div>
       </div>
+
+      <!-- Hint 2 arah -->
+      <p class="text-center text-white/50 text-[11px] -mt-2">
+        Isi salah satu kolom
+      </p>
 
       <!-- Submit Button -->
       <button 
@@ -266,23 +451,20 @@ const handleSubmit = () => {
       </button>
     </form>
 
-    <!-- MODAL POPUP KENDARAAN SUDAH MENGISI (PALET HIJAU & PUTIH) -->
+    <!-- MODAL POPUP KENDARAAN SUDAH MENGISI -->
     <Teleport to="body">
       <div v-if="showRefueledModal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-xl animate-enter">
         <div class="bg-gradient-to-br from-[#143d2e] via-[#1e5c45] to-[#143d2e] border-2 border-white/30 rounded-[2rem] md:rounded-[2.5rem] max-w-md w-full p-6 md:p-8 text-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] flex flex-col items-center text-center relative overflow-hidden">
           
-          <!-- Background Glow Elements (Hijau / Putih) -->
           <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
           <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
-          <!-- Icon Badge (Putih & Transparan) -->
           <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-white/10 border-2 border-white/30 flex items-center justify-center text-white mb-4 shadow-xl">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 md:w-12 md:h-12 text-white">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
             </svg>
           </div>
 
-          <!-- Modal Header -->
           <span class="px-3.5 py-1 rounded-full text-[11px] font-extrabold bg-white/10 border border-white/20 text-white uppercase tracking-widest mb-2">
             Peringatan Pengisian Ganda
           </span>
@@ -293,7 +475,6 @@ const handleSubmit = () => {
             Sistem mendeteksi transaksi pengisian BBM untuk kendaraan ini pada hari yang sama. Transaksi ditolak.
           </p>
 
-          <!-- Details Card (Hijau & Putih) -->
           <div class="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl md:rounded-3xl p-4 md:p-5 text-left space-y-3 shadow-inner mb-6">
             <div class="flex justify-between items-center border-b border-white/15 pb-2.5">
               <span class="text-xs font-medium text-white/70">Nomor Polisi</span>
@@ -313,7 +494,6 @@ const handleSubmit = () => {
             </div>
           </div>
 
-          <!-- Action Button (Putih Solid dengan Teks Hijau Gelap) -->
           <button 
             @click="handleResetPlateCheck"
             class="w-full bg-white hover:bg-emerald-50 text-[#143d2e] font-black text-base md:text-lg py-4 rounded-2xl shadow-xl hover:shadow-white/20 transform active:scale-95 transition-all flex items-center justify-center gap-2"
@@ -328,7 +508,7 @@ const handleSubmit = () => {
       </div>
     </Teleport>
 
-    <!-- CAMERA SCANNER MODAL (TELEPORT DILUAR FORM) -->
+    <!-- CAMERA SCANNER MODAL -->
     <Teleport to="body">
       <div v-if="isScanning" class="fixed inset-0 z-[9999] bg-black flex flex-col">
         
@@ -387,5 +567,20 @@ const handleSubmit = () => {
 }
 .animate-scan {
   animation: scan 2s linear infinite;
+}
+
+.plat-err-enter-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.plat-err-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.plat-err-enter-from {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+.plat-err-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 </style>

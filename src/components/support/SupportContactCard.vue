@@ -36,7 +36,6 @@ const userEmail = computed(() => authStore.user?.email || 'User')
       <div class="pt-4 border-t border-white/10">
         <p class="text-xs opacity-70 mb-2">Logged in as:</p>
         <div class="flex items-center gap-2">
-          <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
           <p class="font-bold truncate text-white">{{ userEmail }}</p>
         </div>
       </div>
