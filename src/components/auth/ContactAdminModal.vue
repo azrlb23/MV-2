@@ -31,9 +31,9 @@ const contacts = [
     id: 'email',
     icon: 'email',
     label: 'Email',
-    value: 'admin@habijaya.com',
+    value: 'azrielalbian23@gmail.com',
     description: 'Kirim permintaan akses',
-    href: 'mailto:admin@habijaya.com',
+    href: 'mailto:azrielalbian23@gmail.com',
     badge: 'Email',
   },
   {

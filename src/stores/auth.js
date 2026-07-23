@@ -63,11 +63,21 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    await supabase.auth.signOut()
-    user.value = null
-    role.value = null
-    isInitialized.value = false
-    window.location.href = '/'
+    isLoading.value = true
+    try {
+      await supabase.auth.signOut()
+    } catch (error) {
+      console.error('Error saat logout:', error)
+    } finally {
+      user.value = null
+      role.value = null
+      isInitialized.value = false
+      isLoading.value = false
+      // Hapus token auth dari storage secara menyeluruh agar router.beforeEach tidak melakukan redirect ulang ke dashboard
+      localStorage.clear()
+      sessionStorage.clear()
+      window.location.href = '/'
+    }
   }
 
   return { user, role, isLoading, isInitialized, login, logout, initialize }
