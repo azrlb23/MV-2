@@ -8,35 +8,52 @@ const shifts = ref([])
 
 const fetchShifts = async () => {
   loading.value = true
-  const { data, error } = await supabase
-    .from('shift_config')
-    .select('*')
-    .order('shift_name')
-  
-  if (error) {
-    console.error(error)
-  } else {
-    shifts.value = data.sort((a, b) => a.shift_name.localeCompare(b.shift_name))
+  try {
+    const { data, error } = await supabase
+      .from('shift_config')
+      .select('*')
+      .order('shift_name')
+    
+    if (error || !data || data.length === 0) {
+      // Jika database kosong / belum ada data shift, gunakan jadwal default
+      shifts.value = [
+        { shift_name: 'Shift 1', start_time: '06:00', end_time: '14:00' },
+        { shift_name: 'Shift 2', start_time: '14:00', end_time: '22:00' },
+        { shift_name: 'Shift 3', start_time: '22:00', end_time: '06:00' }
+      ]
+    } else {
+      shifts.value = data.sort((a, b) => a.shift_name.localeCompare(b.shift_name))
+    }
+  } catch (err) {
+    console.error('Error fetchShifts:', err)
+  } finally {
+    loading.value = false
   }
-  loading.value = false
 }
 
 const saveShifts = async () => {
   loading.value = true
   try {
-    const updates = shifts.value.map(s => ({
-      id: s.id,
-      shift_name: s.shift_name,
-      start_time: s.start_time,
-      end_time: s.end_time,
-      updated_at: new Date()
-    }))
+    const updates = shifts.value.map(s => {
+      const row = {
+        shift_name: s.shift_name,
+        start_time: s.start_time,
+        end_time: s.end_time,
+        updated_at: new Date()
+      }
+      if (s.id) row.id = s.id
+      return row
+    })
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('shift_config')
       .upsert(updates)
+      .select()
 
     if (error) throw error
+    if (data && data.length > 0) {
+      shifts.value = data.sort((a, b) => a.shift_name.localeCompare(b.shift_name))
+    }
     toast.success("Jam operasional shift berhasil diperbarui!")
   } catch (err) {
     toast.error("Gagal menyimpan: " + err.message)

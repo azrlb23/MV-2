@@ -8,34 +8,58 @@ const prices = ref([])
 
 const fetchPrices = async () => {
   loading.value = true
-  const { data, error } = await supabase
-    .from('fuel_prices')
-    .select('*')
-    .order('fuel_type') 
-  
-  if (error) {
-    console.error(error)
-  } else {
-    prices.value = data
+  try {
+    const { data, error } = await supabase
+      .from('fuel_prices')
+      .select('*')
+      .order('fuel_type')
+    
+    if (error || !data || data.length === 0) {
+      // Jika database kosong / belum ada data harga, sediakan data default agar form tetap muncul
+      prices.value = [
+        { fuel_type: 'Pertalite', price_per_liter: 10000 },
+        { fuel_type: 'Pertamax', price_per_liter: 12950 },
+        { fuel_type: 'Solar', price_per_liter: 6800 }
+      ]
+    } else {
+      prices.value = data
+    }
+  } catch (err) {
+    console.error('Error fetchPrices:', err)
+  } finally {
+    loading.value = false
   }
-  loading.value = false
+}
+
+const addNewFuelType = () => {
+  prices.value.push({
+    fuel_type: 'BBM Baru',
+    price_per_liter: 10000
+  })
 }
 
 const savePrices = async () => {
   loading.value = true
   try {
-    const updates = prices.value.map(p => ({
-      id: p.id,
-      fuel_type: p.fuel_type,
-      price_per_liter: p.price_per_liter,
-      updated_at: new Date()
-    }))
+    const updates = prices.value.map(p => {
+      const row = {
+        fuel_type: p.fuel_type,
+        price_per_liter: Number(p.price_per_liter) || 0,
+        updated_at: new Date()
+      }
+      if (p.id) row.id = p.id
+      return row
+    })
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('fuel_prices')
       .upsert(updates)
+      .select()
 
     if (error) throw error
+    if (data && data.length > 0) {
+      prices.value = data
+    }
     toast.success("Harga BBM berhasil diperbarui!")
   } catch (err) {
     toast.error("Gagal menyimpan harga: " + err.message)
