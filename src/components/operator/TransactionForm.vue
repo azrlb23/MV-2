@@ -34,37 +34,97 @@ const form = ref({
 // Menentukan kolom mana yang terakhir diedit agar tidak terjadi loop
 const lastEdited = ref('liter') // 'liter' | 'harga'
 
-// ─── Validasi Plat Nomor Indonesia ───────────────────────────────────────────
-// Format: [1-2 huruf kode wilayah] [spasi] [1-4 angka] [spasi opsional] [1-3 huruf akhir]
-// Contoh valid: KT 1234 AB, B 1234 CD, DK 123 A
-const PLAT_REGEX = /^[A-Z]{1,2}\s?\d{1,4}\s?[A-Z]{1,3}$/
+// ─── Validasi & Auto-Format Plat Nomor Indonesia ─────────────────────────────
+// Format: [1-2 huruf kode wilayah] [1-4 angka] [1-3 huruf akhir]
+// Contoh valid: KT 1234 AB, B 1234 CD, DK 123 A, KT 1234
+const PLAT_REGEX = /^[A-Z]{1,2}\s\d{1,4}(\s[A-Z]{1,3})?$/
 
 const platError = ref('')  // pesan error validasi
 const platTouched = ref(false)  // apakah user sudah pernah mengetik
 
+// Auto-format plat nomor sekuensial:
+// Bagian 1: WAJIB 1-2 Huruf Kode Wilayah di awal (angka di awal ditolak)
+// Bagian 2: HANYA 1-4 Angka Nomor Polisi
+// Bagian 3: 1-3 Huruf Seri/Akhiran Wilayah
+const formatPlatNomor = (val) => {
+  if (!val) return ''
+  const raw = val.toUpperCase().replace(/[^A-Z0-9]/g, '')
+
+  let region = ''
+  let number = ''
+  let suffix = ''
+
+  let i = 0
+
+  // 1. Kode Wilayah: Wajib 1-2 Huruf di awal.
+  // Abaikan/lewati jika user mencoba memasukkan angka sebelum ada huruf kode wilayah
+  while (i < raw.length && !/[A-Z]/.test(raw[i])) {
+    i++
+  }
+
+  // Ambil 1-2 huruf kode wilayah
+  while (i < raw.length && /[A-Z]/.test(raw[i]) && region.length < 2) {
+    region += raw[i]
+    i++
+  }
+
+  // Jika tidak ada huruf kode wilayah sama sekali, tolak seluruh input (kembalikan kosong)
+  if (!region) return ''
+
+  // Jika ada huruf ke-3 sebelum angka, lewati huruf ekstra tersebut hingga menemukan angka
+  while (i < raw.length && !/\d/.test(raw[i])) {
+    i++
+  }
+
+  // 2. Nomor Polisi: HANYA 1-4 Angka (angka pertama TIDAK BOLEH 0)
+  while (i < raw.length && /\d/.test(raw[i]) && number.length < 4) {
+    // Angka pertama nomor polisi tidak boleh 0
+    if (number.length === 0 && raw[i] === '0') {
+      i++
+      continue
+    }
+    number += raw[i]
+    i++
+  }
+
+  // 3. Huruf Akhir / Seri Wilayah: 1-3 Huruf (hanya diisi jika nomor polisi sudah ada)
+  if (number) {
+    while (i < raw.length && suffix.length < 3) {
+      if (/[A-Z]/.test(raw[i])) {
+        suffix += raw[i]
+      }
+      i++
+    }
+  }
+
+  let result = region
+  if (number) result += ' ' + number
+  if (suffix) result += ' ' + suffix
+
+  return result
+}
+
 // Status visual kolom plat
 const platStatus = computed(() => {
   if (!platTouched.value || !form.value.plat_nomor) return 'idle'
-  return PLAT_REGEX.test(form.value.plat_nomor.replace(/\s+/g, ' ').trim()) ? 'valid' : 'invalid'
+  const formatted = formatPlatNomor(form.value.plat_nomor)
+  return PLAT_REGEX.test(formatted.trim()) ? 'valid' : 'invalid'
 })
 
 // Sanitasi & auto-format input plat saat mengetik
 const onPlatInput = (e) => {
   platTouched.value = true
 
-  // Hanya izinkan huruf, angka, dan spasi — buang karakter lain
-  let raw = e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, '')
+  // Auto-format otomatis menjadi (KT 1234 AB) tanpa perlu ketik spasi manual
+  const formatted = formatPlatNomor(e.target.value)
 
-  // Hindari spasi ganda dan spasi di awal
-  raw = raw.replace(/\s{2,}/g, ' ').replace(/^\s/, '')
+  form.value.plat_nomor = formatted
 
-  form.value.plat_nomor = raw
-
-  // Paksa DOM langsung sinkron agar karakter terlarang tidak sempat terlihat
-  e.target.value = raw
+  // Paksa DOM langsung sinkron dengan format rapi
+  e.target.value = formatted
 
   // Update pesan error
-  const cleaned = raw.replace(/\s+/g, ' ').trim()
+  const cleaned = formatted.trim()
   if (!cleaned) {
     platError.value = ''
   } else if (!PLAT_REGEX.test(cleaned)) {
@@ -101,7 +161,8 @@ onMounted(() => {
 
 const handleCheckPlate = async () => {
   platTouched.value = true
-  const cleaned = form.value.plat_nomor.replace(/\s+/g, ' ').trim()
+  const formatted = formatPlatNomor(form.value.plat_nomor)
+  const cleaned = formatted.trim()
 
   if (!cleaned) {
     platError.value = 'Mohon masukkan nomor plat kendaraan'
@@ -353,7 +414,7 @@ const handleSubmit = () => {
 
           <!-- Format hint -->
           <p class="text-white/35 text-[10px] text-center tracking-wide">
-            Format: <span class="font-bold text-white/50">KT 1234 AB</span> &nbsp;·&nbsp; Kode Wilayah + Angka + Huruf Akhir
+            Contoh: <span class="font-bold text-white/50">KT1234AB</span> &nbsp;·&nbsp; Spasi akan terisi otomatis secara rapi
           </p>
         </div>
 
