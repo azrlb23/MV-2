@@ -184,11 +184,31 @@ const handleScan = async () => {
   }
 }
 
-const HARGA_PER_LITER = 10000
+const hargaPerLiter = ref(10000)
+
+const fetchActiveFuelPrice = async () => {
+  try {
+    const { data } = await supabase
+      .from('fuel_prices')
+      .select('price_per_liter')
+      .ilike('fuel_type', '%pertalite%')
+      .limit(1)
+
+    if (data && data.length > 0 && Number(data[0].price_per_liter) > 0) {
+      hargaPerLiter.value = Number(data[0].price_per_liter)
+    }
+  } catch (err) {
+    console.warn("Gagal mengambil harga BBM dari database, menggunakan harga default (10.000):", err)
+  }
+}
+
+onMounted(() => {
+  fetchActiveFuelPrice()
+})
 
 const calculatedPrice = computed(() => {
   const liter = parseFloat(form.value.liter) || 0
-  return liter * HARGA_PER_LITER
+  return liter * hargaPerLiter.value
 })
 
 const formatRupiah = (val) => {
@@ -207,13 +227,13 @@ const parseRupiah = (str) => {
 watch(() => form.value.liter, (val) => {
   if (lastEdited.value !== 'liter') return
   const liter = parseFloat(val) || 0
-  form.value.totalHarga = liter > 0 ? formatAngka(liter * HARGA_PER_LITER) : ''
+  form.value.totalHarga = liter > 0 ? formatAngka(liter * hargaPerLiter.value) : ''
 })
 
 watch(() => form.value.totalHarga, (val) => {
   if (lastEdited.value !== 'harga') return
   const harga = parseRupiah(val)
-  form.value.liter = harga > 0 ? String((harga / HARGA_PER_LITER).toFixed(2)) : ''
+  form.value.liter = harga > 0 ? String((harga / hargaPerLiter.value).toFixed(2)) : ''
 })
 
 const ALLOWED_NUMERIC_KEYS = new Set([
@@ -261,7 +281,7 @@ const handleSubmit = () => {
   emit('submit', {
     plat_nomor: form.value.plat_nomor,
     liter: form.value.liter,
-    total_harga: liter * HARGA_PER_LITER
+    total_harga: liter * hargaPerLiter.value
   })
 }
 </script>
